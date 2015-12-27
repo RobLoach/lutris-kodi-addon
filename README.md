@@ -16,6 +16,8 @@
 
 3. Configure the addon to ensure the Lutris executable is correct
 
+4. This requires [Lutris JSON support](https://github.com/lutris/lutris/pull/240), so get @strycore to merge it and make a Lutris release
+
 ## About
 
 - Author: [Rob Loach](http://robloach.net)
