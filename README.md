@@ -2,6 +2,8 @@
 
 [Kodi](http://kodi.tv) addon to launch games through [Lutris](http://lutris.net).
 
+![Lutris Kodi Addon Screenshot](resources/media/screenshot.jpg "Lutris Kodi Addon")
+
 ## Install
 
 1. Download the addon to `~/.kodi/addons/script.lutris/`
