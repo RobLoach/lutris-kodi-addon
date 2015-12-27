@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon
+    id="script.lutris"
+    name="Lutris"
+    version="0.0.1"
+    provider-name="Rob Loach">
+    <requires>
+        <import addon="xbmc.python" version="2.19.0" />
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>game executable</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en">Lutris</summary>
+        <description lang="en">Open Gaming Platform to install and launch games from Kodi.</description>
+        <disclaimer lang="en">For more information, visit Lutris.net.</disclaimer>
+        <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+        <website>http://lutris.net</website>
+        <source>http://github.com/robloach/script.lutris</source>
+        <platform>linux</platform>
+        <language>en</language>
+    </extension>
+</addon>

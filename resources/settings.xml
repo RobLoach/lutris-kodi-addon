@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <!-- General -->
+    <category label="30100">
+        <!-- Lutris Executable -->
+        <setting id="lutris_executable"
+            type="file"
+            label="30101"
+            value="lutris"
+            default="lutris" />
+    </category>
+</settings>
