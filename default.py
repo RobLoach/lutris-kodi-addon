@@ -25,11 +25,15 @@ def build_url(query):
 # Discover what the user is doing
 mode = args.get('mode', None)
 if mode is None:
+    addon = xbmcaddon.Addon('script.lutris')
+    fanart = addon.getAddonInfo('fanart')
+
     # Add the Launch Lutris item
     title = language(30000)
     iconImage = os.path.join(settings.getAddonInfo('path'), 'icon.png')
     url = build_url({'mode': 'folder', 'foldername': title, 'slug': 'lutris'})
     li = xbmcgui.ListItem(title, iconImage=iconImage)
+    li.setArt({'fanart': fanart})
     xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 
     # Get a list of all Games
@@ -48,10 +52,25 @@ if mode is None:
         # Filter out the unprintable Unicode characters
         name = filter(lambda x: x in string.printable, game['name'])
         slug = filter(lambda x: x in string.printable, game['slug'])
+        runner = game['runner'] or ''
+        if runner == '-':
+            runner = ''
 
         # Construct the list item
+        li = xbmcgui.ListItem(name, runner, iconImage=iconImage)
+        li.setArt({
+            'fanart': fanart
+        })
+        li.setProperty('Runner', runner)
+
+        # Add the contextual menu
+        commands = []
+        if runner:
+            commands.append((language(30200) % (runner), 'RunPlugin(%s?mode=folder&slug=%s)' % (sys.argv[0], slug + ' --reinstall')))
+        li.addContextMenuItems(commands)
+
+        # Add the list item into the directory listing
         url = build_url({'mode': 'folder', 'foldername': name, 'slug': slug})
-        li = xbmcgui.ListItem(name, iconImage=iconImage)
         xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, totalItems=totalItems)
 
     # Finished the list
