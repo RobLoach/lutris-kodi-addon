@@ -36,8 +36,10 @@ if mode is None:
     li.setArt({'fanart': fanart})
     xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 
-    # Get a list of all Games
+    # Get a list of the games from Lutris
     args = settings.getSetting('lutris_executable') + ' --list-games --json'
+    if settings.getSetting('installed'):
+        args += ' --installed'
     result = subprocess.check_output(args, shell=True)
 
     games = []

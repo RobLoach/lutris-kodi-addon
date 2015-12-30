@@ -8,5 +8,11 @@
             label="30101"
             value="lutris"
             default="lutris" />
+
+        <!-- Lutris Executable -->
+        <setting id="installed"
+            type="bool"
+            label="30102"
+            default="false" />
     </category>
 </settings>
