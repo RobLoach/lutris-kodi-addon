@@ -6,19 +6,11 @@
 
 ## Install
 
-1. Download the addon to `~/.kodi/addons/script.lutris/`
-  ```
-  git clone https://github.com/RobLoach/script.lutris.git ~/.kodi/addons/script.lutris
-  ```
+1. [Install the SuperRepo repository](https://superrepo.org/get-started/)
 
-2. Enable the addon in Kodi
-  ```
-  System -> Addons -> Program add-ons -> Lutris -> Enable
-  ```
+2. Visit Home -> Settings -> Addons -> Install from repository -> SuperRepo -> Program Add-ons -> Lutris -> Install
 
-3. Configure the addon to ensure the Lutris executable is correct
-
-4. This requires [Lutris JSON support](https://github.com/lutris/lutris/pull/240), so get @strycore to merge it and make a Lutris release
+3. Configure the addon to ensure the Lutris executable path is correct
 
 ## About
 
