@@ -1,3 +1,8 @@
+[B]Version 0.1.0: January 4th, 2016[/B]
+
+- Published on SuperRepo's repository
+- Added setting to only show installed games
+
 [B]Version 0.0.1: December 28th, 2015[/B]
 
 - Initial commit

@@ -78,6 +78,7 @@ if mode is None:
     # Finished the list
     xbmcplugin.endOfDirectory(addon_handle)
 
+# Launch
 elif mode[0] == 'folder':
     lutris = settings.getSetting('lutris_executable')
     slug = args['slug'][0]
