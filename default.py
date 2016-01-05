@@ -38,7 +38,7 @@ if mode is None:
 
     # Get a list of the games from Lutris
     args = settings.getSetting('lutris_executable') + ' --list-games --json'
-    if settings.getSetting('installed'):
+    if settings.getSetting('installed') == True:
         args += ' --installed'
     result = subprocess.check_output(args, shell=True)
 
