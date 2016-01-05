@@ -27,6 +27,7 @@ mode = args.get('mode', None)
 if mode is None:
     addon = xbmcaddon.Addon('script.lutris')
     fanart = addon.getAddonInfo('fanart')
+    home = os.path.expanduser('~')
 
     # Add the Launch Lutris item
     title = language(30000)
@@ -59,9 +60,14 @@ if mode is None:
             runner = ''
 
         # Construct the list item
-        li = xbmcgui.ListItem(name, runner, iconImage=iconImage)
+        gameThumb = os.path.join(home, '.local', 'share', 'icons', 'hicolor', '32x32', 'apps', 'lutris_' + slug + '.png')
+        gameBanner = os.path.join(home, '.local', 'share', 'lutris', 'banners', slug + '.jpg')
+        li = xbmcgui.ListItem(name, runner, iconImage=gameThumb)
         li.setArt({
-            'fanart': fanart
+            'fanart': gameBanner,
+            'thumb': gameThumb,
+            'banner': gameBanner,
+            'poster': gameBanner
         })
         li.setProperty('Runner', runner)
 
