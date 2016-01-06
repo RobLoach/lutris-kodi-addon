@@ -35,20 +35,20 @@ if mode is None:
     url = build_url({'mode': 'folder', 'foldername': title, 'slug': 'lutris'})
     li = xbmcgui.ListItem(title, iconImage=iconImage)
     li.setArt({'fanart': fanart})
-    xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
+    xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, totalItems=2)
 
     # Get a list of the games from Lutris
     args = settings.getSetting('lutris_executable') + ' --list-games --json'
-    if settings.getSetting('installed') == True:
-        args += ' --installed'
+    if settings.getSetting('installed') in [True, 'True', 'true', 1]:
+        args = args + ' --installed'
     result = subprocess.check_output(args, shell=True)
 
     games = []
     try:
         games = json.loads(result)
     except:
-        print 'Cannot parse games json'
-        print games
+        # Open the settings to fix the Lutris path
+        settings.openSettings()
 
     totalItems = len(games)
     for game in games:
