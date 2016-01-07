@@ -12,6 +12,14 @@
 
 3. Configure the addon to ensure the Lutris executable path is correct
 
+## Development
+
+```bash
+git clone git@github.com:RobLoach/script.lutris.git ~/.kodi/addons/script.lutris
+cd ~/.kodi/addons/script.lutris
+git status
+```
+
 ## About
 
 - Author: [Rob Loach](http://robloach.net)
