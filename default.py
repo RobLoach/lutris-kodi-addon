@@ -22,6 +22,12 @@ xbmcplugin.setContent(addon_handle, 'files')
 def build_url(query):
     return base_url + '?' + urllib.urlencode(query)
 
+def getLutrisExecutable():
+    lutrisExecutable = settings.getSetting('lutris_executable')
+    if lutrisExecutable == 'script.lutris':
+        return os.path.join(settings.getAddonInfo('path'), 'lutris', 'bin', 'lutris')
+    return lutrisExecutable
+
 # Discover what the user is doing
 mode = args.get('mode', None)
 if mode is None:
@@ -38,7 +44,7 @@ if mode is None:
     xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, totalItems=2)
 
     # Get a list of the games from Lutris
-    args = settings.getSetting('lutris_executable') + ' --list-games --json'
+    args = getLutrisExecutable() + ' --list-games --json'
     if settings.getSetting('installed') in [True, 'True', 'true', 1]:
         args = args + ' --installed'
 
@@ -100,7 +106,7 @@ if mode is None:
 
 # Launch
 elif mode[0] == 'folder':
-    lutris = settings.getSetting('lutris_executable')
+    lutris = getLutrisExecutable()
     slug = args['slug'][0]
     cmd = lutris
     if slug != 'lutris':
