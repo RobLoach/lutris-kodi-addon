@@ -1,4 +1,4 @@
-[B]Version 0.1.x: Unreleased[/B]
+[B]Version 1.0.0: Unreleased[/B]
 
 - Added error handling
 
