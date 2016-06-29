@@ -41,13 +41,27 @@ if mode is None:
     args = settings.getSetting('lutris_executable') + ' --list-games --json'
     if settings.getSetting('installed') in [True, 'True', 'true', 1]:
         args = args + ' --installed'
-    result = subprocess.check_output(args, shell=True)
 
+    # Get the list of games from Lutris
+    result = '[]'
+    try:
+        result = subprocess.check_output(args, shell=True)
+    except:
+        xbmcgui.Dialog().ok(
+            'Lutris Not Found',
+            '1. Install Lutris from http://lutris.com',
+            '2. Select its executable location in the following settings')
+        settings.openSettings()
+
+    # Parse the list of games from JSON to a Python array.
     games = []
     try:
         games = json.loads(result)
     except:
-        # Open the settings to fix the Lutris path
+        xbmcgui.Dialog().ok(
+            'Lutris Result Malformed',
+            '1. Make sure the Lutris executable path is correct',
+            '2. Attempt launching and configuring it again')
         settings.openSettings()
 
     totalItems = len(games)
