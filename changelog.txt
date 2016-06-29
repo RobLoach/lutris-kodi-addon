@@ -1,4 +1,4 @@
-[B]Version 1.0.0: Unreleased[/B]
+[B]Version 1.0.0: June 29th, 2016[/B]
 
 - Added error handling
 
