@@ -1,4 +1,8 @@
-[B]Version 1.1.0: June 29th, 2016[/B]
+[B]Version 1.1.1: September 16th, 2016[/B]
+
+- Release fix
+
+[B]Version 1.1.0: September 16th, 2016[/B]
 
 - Using game banners for the thumbnails
 
