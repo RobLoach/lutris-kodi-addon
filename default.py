@@ -76,12 +76,13 @@ if mode is None:
         # Construct the list item
         gameThumb = os.path.join(home, '.local', 'share', 'icons', 'hicolor', '32x32', 'apps', 'lutris_' + slug + '.png')
         gameBanner = os.path.join(home, '.local', 'share', 'lutris', 'banners', slug + '.jpg')
-        li = xbmcgui.ListItem(name, runner, iconImage=gameThumb)
+        li = xbmcgui.ListItem(name, runner, iconImage=gameBanner)
         li.setArt({
             'fanart': fanart,
-            'thumb': gameThumb,
+            'thumb': gameBanner,
             'banner': gameBanner,
-            'poster': gameBanner
+            'poster': gameBanner,
+            'landscape': gameBanner
         })
         li.setProperty('Runner', runner)
 
