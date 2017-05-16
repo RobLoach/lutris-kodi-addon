@@ -13,6 +13,6 @@
         <setting id="installed"
             type="bool"
             label="30102"
-            default="false" />
+            default="true" />
     </category>
 </settings>
