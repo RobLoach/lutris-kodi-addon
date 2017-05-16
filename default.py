@@ -105,5 +105,5 @@ elif mode[0] == 'folder':
     slug = args['slug'][0]
     cmd = lutris
     if slug != 'lutris':
-        cmd = cmd + ' lutris:' + slug
+        cmd = cmd + ' lutris:rungame/' + slug
     os.system(cmd)
