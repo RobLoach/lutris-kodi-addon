@@ -1,0 +1,2 @@
+""" Misc common functions """
+

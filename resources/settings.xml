@@ -6,8 +6,8 @@
         <setting id="lutris_executable"
             type="file"
             label="30101"
-            value="lutris"
-            default="lutris" />
+            value="script.lutris"
+            default="script.lutris" />
 
         <!-- Lutris Executable -->
         <setting id="installed"

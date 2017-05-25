@@ -1,0 +1,197 @@
+#!/usr/bin/python2
+# -*- Mode: Python; coding: utf-8; indent-tabs-mode: nil; tab-width: 4 -*-
+#
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 3, as published
+# by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranties of
+# MERCHANTABILITY, SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR
+# PURPOSE.  See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import dbus
+import dbus.service
+import os
+import sys
+import logging
+import optparse
+import signal
+import time
+import json
+
+# pylint: disable=E0611
+import gi
+gi.require_version('Gdk', '3.0')
+gi.require_version('Gtk', '3.0')
+
+from dbus.mainloop.glib import DBusGMainLoop
+DBusGMainLoop(set_as_default=True)
+
+from gi.repository import Gdk, Gtk, GObject, GLib
+
+from os.path import realpath, dirname, normpath
+
+LAUNCH_PATH = dirname(realpath(__file__))
+if LAUNCH_PATH != "/usr/bin":
+    SOURCE_PATH = normpath(os.path.join(LAUNCH_PATH, '..'))
+    sys.path.insert(0, SOURCE_PATH)
+
+from lutris.migrations import migrate
+
+from lutris import pga, runtime
+from lutris.config import check_config  # , register_handler
+from lutris.util.log import logger
+from lutris.game import Game
+from lutris.gui.installgamedialog import InstallerDialog
+from lutris.settings import VERSION
+from lutris.util import service
+
+# Support for command line options.
+parser = optparse.OptionParser(version="%prog " + VERSION)
+parser.add_option("-v", "--verbose", action="store_true", dest="verbose",
+                  help="Verbose output")
+parser.add_option("-d", "--debug", action="store_true", dest="debug",
+                  help="Show debug messages")
+parser.add_option("-i", "--install", dest="installer_file",
+                  help="Install a game from a yml file")
+parser.add_option("-l", "--list-games", action="store_true", dest="list_games",
+                  help="List games in database")
+parser.add_option("-o", "--installed", action="store_true", dest="list_installed",
+                  help="Only list installed games")
+parser.add_option("-s", "--list-steam", action="store_true",
+                  help="List Steam (Windows) games")
+parser.add_option("-j", "--json", action="store_true", dest="json",
+                  help="Display the list of games in JSON format")
+parser.add_option("--reinstall", action="store_true", help="Reinstall game")
+(options, args) = parser.parse_args()
+
+if options.verbose:
+    logger.setLevel(logging.INFO)
+
+if options.debug:
+    logger.setLevel(logging.DEBUG)
+
+if options.list_games:
+    game_list = pga.get_games()
+    if options.list_installed:
+        game_list = [game for game in game_list if game['installed']]
+    if options.json:
+        games = []
+        for game in game_list:
+            games.append({
+                'id': game['id'],
+                'slug': game['slug'],
+                'name': game['name'],
+                'runner': game['runner'],
+                'directory': game['directory'] or '-'
+            })
+        print json.dumps(games, indent=2).encode('utf-8')
+    else:
+        for game in game_list:
+            print u"{:4} | {:<40} | {:<40} | {:<15} | {:<64}".format(
+                game['id'],
+                game['name'][:40],
+                game['slug'][:40],
+                game['runner'],
+                game['directory'] or '-'
+            ).encode('utf-8')
+    exit()
+if options.list_steam:
+    from lutris.runners import winesteam
+    steam_runner = winesteam.winesteam()
+    print steam_runner.get_appid_list()
+    exit()
+
+
+check_config(force_wipe=False)
+
+installer = False
+game = None
+
+signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+# D-Bus init
+
+bus = dbus.SessionBus()
+lutris = service.get_service(bus)
+
+# Make sure the existing process is not frozen
+if type(lutris) is dbus.Interface:
+    try:
+        lutris.is_running()
+    except dbus.exceptions.DBusException as e:
+        logger.error(e)
+
+        # FIXME This whole thing below is utterly broken and I've never seen
+        # the expected behavior happen. Now, if only I knew how to reproduce
+        # this state, maybe I might be able to write a fix but I still have no
+        # idea what's causing this non-responsive DBus thing.
+        try:
+            # Get existing process' PID
+            dbus_proxy = bus.get_object('org.freedesktop.DBus',
+                                        '/org/freedesktop/DBus/Bus')
+            dbus_interface = dbus.Interface(dbus_proxy, 'org.freedesktop.DBus')
+            pid = dbus_interface.GetConnectionUnixProcessID(lutris.bus_name)
+
+            os.kill(pid, signal.SIGKILL)
+        except (OSError, dbus.exceptions.DBusException) as ex:
+            logger.error("Lutris was non responsive, we tried, we failed and failed "
+                         "some more. Please now try to restart Lutris")
+            logger.error(ex)
+            exit()  # Give up :(
+        else:
+            time.sleep(1)  # Wait for bus name to be available again
+            lutris = service.LutrisService(bus, '/', service.DBUS_INTERFACE)
+
+migrate()
+
+game_slug = ""
+for arg in args:
+    if arg.startswith('lutris:'):
+        game_slug = arg[7:]
+        break
+
+installer = options.installer_file
+
+if game_slug or installer:
+    if not game_slug and not os.path.isfile(installer):
+        print("No such file: %s" % installer)
+        exit()
+
+    db_game = None
+    if game_slug:
+        db_game = (pga.get_game_by_field(game_slug, 'id')
+                   or pga.get_game_by_field(game_slug, 'slug')
+                   or pga.get_game_by_field(game_slug, 'installer_slug'))
+
+    if db_game and db_game['installed'] and not options.reinstall:
+        logger.info("Launching %s", db_game['name'])
+        if lutris.is_running():
+            lutris.run_game(db_game['id'])
+        else:
+            runtime.update()
+            lutris_game = Game(db_game['id'])
+            lutris_game.exit_main_loop = True
+            lutris_game.play()
+            try:
+                GLib.MainLoop().run()
+            except KeyboardInterrupt:
+                lutris_game.stop()
+    else:
+        logger.info("Installing %s", game_slug)
+        if lutris.is_running():
+            lutris.install_game(installer or game_slug)
+        else:
+            runtime.update()
+            InstallerDialog(installer or game_slug)
+            GObject.threads_init()
+            Gtk.main()
+    exit()
+
+lutris.run(int(time.time()))
+if lutris.is_running():
+    Gdk.notify_startup_complete()

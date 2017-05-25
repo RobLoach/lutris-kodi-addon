@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Lutris
+Comment=Lutris application
+Categories=Game;
+Exec=lutris %U
+Icon=lutris
+Terminal=false
+Type=Application
+MimeType=x-scheme-handler/lutris;
