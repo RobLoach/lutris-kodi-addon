@@ -6,6 +6,7 @@ import subprocess
 import sys
 import urllib
 import urlparse
+import xbmc
 import xbmcaddon
 import xbmcgui
 import xbmcplugin
@@ -106,4 +107,6 @@ elif mode[0] == 'folder':
     cmd = lutris
     if slug != 'lutris':
         cmd = cmd + ' lutris:rungame/' + slug
+    if xbmc.Player().isPlaying() == True:
+        xbmc.Player().stop()
     os.system(cmd)
