@@ -1,3 +1,8 @@
+[B]Version 1.2.0: June 26th, 2017[/B]
+
+- Stop playing music when launching a Lutris game, by @solbero
+- Update for Lutris 0.4.12
+
 [B]Version 1.1.1: September 16th, 2016[/B]
 
 - Release fix
