@@ -6,7 +6,8 @@
 
     <!-- Settings -->
     <string id="30100">General</string>
-    <string id="30101">Lutris Executable</string>
+    <string id="30103">Enable Custom Path</string>
+    <string id="30101">Path to Lutris Executable</string>
     <string id="30102">Display Only Installed Games</string>
 
     <!-- Contextual Menu -->
