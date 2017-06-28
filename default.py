@@ -10,6 +10,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 import xbmcplugin
+from distutils.spawn import find_executable
 
 # Globals
 base_url = sys.argv[0]
