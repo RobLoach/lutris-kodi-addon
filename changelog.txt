@@ -1,3 +1,6 @@
+[B]Version 1.x: XXXX, XX[/B]
+- Better custom Lutris path support, by @solbero
+
 [B]Version 1.2.0: June 26th, 2017[/B]
 
 - Stop playing music when launching a Lutris game, by @solbero
