@@ -3,7 +3,7 @@
     <!-- General -->
     <category label="30100">
         <!-- Lutris Executable -->
-        <setting id="custom_path"
+        <setting id="use_custom_path"
           type="bool"
           label="30103"
           default="false" />

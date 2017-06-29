@@ -12,7 +12,7 @@
     </extension>
     <extension point="xbmc.addon.metadata">
         <summary lang="en">Lutris</summary>
-        <description lang="en">Open Gaming Platform to install and launch games from Kodi.</description>
+        <description lang="en">Open Gaming Platform to install and launch games from within Kodi. You need to have Lutris installed to use this add-on.</description>
         <disclaimer lang="en">For more information, visit Lutris.net.</disclaimer>
         <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
         <website>http://lutris.net</website>
