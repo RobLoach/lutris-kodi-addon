@@ -50,7 +50,6 @@ if mode is None:
                 'Lutris Not Found',
                 '1. Install Lutris from http://lutris.com',
                 '2. If Lutris is installed and the problem persists set a custom path to the executable in the add-on settings')
-            xbmc.executebuiltin("PreviousMenu")
     if settings.getSetting('installed') in [True, 'True', 'true', 1]:
         args = args + ' --installed'
 
