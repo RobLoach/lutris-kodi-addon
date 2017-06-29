@@ -41,15 +41,18 @@ if mode is None:
 
     # Get the path to the Lutris executable
     if settings.getSetting('use_custom_path') in [True, 'True', 'true', 1]:
-        args = settings.getSetting('lutris_executable') + ' --list-games --json'
+        executable = settings.getSetting('lutris_executable')
     else:
         try:
-            args = find_executable("lutris") + ' --list-games --json'
+            executable = find_executable("lutris")
         except:
             xbmcgui.Dialog().ok(
                 'Lutris Not Found',
                 '1. Install Lutris from http://lutris.com',
                 '2. If Lutris is installed and the problem persists set a custom path to the executable in the add-on settings')
+
+    # Append arguments to executable path
+    args = executable + ' --list-games --json'
     if settings.getSetting('installed') in [True, 'True', 'true', 1]:
         args = args + ' --installed'
 
@@ -71,7 +74,7 @@ if mode is None:
         xbmcgui.Dialog().ok(
             'Lutris Result Malformed',
             '1. Make sure the Lutris executable path is correct',
-            '2. Attempt launching and configuring it again')
+            '2. Attempt configuring and launching the add-on again')
         settings.openSettings()
 
     totalItems = len(games)
@@ -111,7 +114,7 @@ if mode is None:
 
 # Launch
 elif mode[0] == 'folder':
-    lutris = settings.getSetting('lutris_executable')
+    lutris = executable
     slug = args['slug'][0]
     cmd = lutris
     if slug != 'lutris':
