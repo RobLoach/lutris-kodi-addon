@@ -40,7 +40,7 @@ if mode is None:
     xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, totalItems=2)
 
     # Get the path to the Lutris executable
-    if settings.getSetting('use_custom_path'):
+    if settings.getSetting('use_custom_path') in [True, 'True', 'true', 1]:
         args = settings.getSetting('lutris_executable') + ' --list-games --json'
     else:
         try:
