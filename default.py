@@ -39,11 +39,18 @@ if mode is None:
     li.setArt({'fanart': fanart})
     xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, totalItems=2)
 
-    # Get a list of the games from Lutris
-    if settings.getSetting('custom_path') in [True, 'True', 'true', 1]:
+    # Get the path to the Lutris executable
+    if settings.getSetting('use_custom_path'):
         args = settings.getSetting('lutris_executable') + ' --list-games --json'
     else:
-        args = args = find_executable("lutris") + ' --list-games --json'
+        try:
+            args = find_executable("lutris") + ' --list-games --json'
+        except:
+            xbmcgui.Dialog().ok(
+                'Lutris Not Found',
+                '1. Install Lutris from http://lutris.com',
+                '2. If Lutris is installed and the problem persists set a custom path to the executable in the add-on settings')
+            xbmc.executebuiltin("PreviousMenu")
     if settings.getSetting('installed') in [True, 'True', 'true', 1]:
         args = args + ' --installed'
 
@@ -54,8 +61,7 @@ if mode is None:
     except:
         xbmcgui.Dialog().ok(
             'Lutris Not Found',
-            '1. Install Lutris from http://lutris.com',
-            '2. If Lutris is installed and the problem persists set a custom path to the executable in the add-on settings')
+            '1. Make sure the Lutris executable path is correct')
         settings.openSettings()
 
     # Parse the list of games from JSON to a Python array.
