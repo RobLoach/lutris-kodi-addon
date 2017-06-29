@@ -10,6 +10,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 import xbmcplugin
+from distutils.spawn import find_executable
 
 # Globals
 base_url = sys.argv[0]
@@ -22,6 +23,14 @@ xbmcplugin.setContent(addon_handle, 'files')
 # Construct a URL for the Kodi navigation
 def build_url(query):
     return base_url + '?' + urllib.urlencode(query)
+
+# Find path to the Lutris executable
+def lutris_executable():
+    if settings.getSetting('use_custom_path') in [True, 'True', 'true', 1]:
+        path = settings.getSetting('lutris_executable')
+    else:
+        path = find_executable("lutris")
+    return path
 
 # Discover what the user is doing
 mode = args.get('mode', None)
@@ -38,8 +47,14 @@ if mode is None:
     li.setArt({'fanart': fanart})
     xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, totalItems=2)
 
-    # Get a list of the games from Lutris
-    args = settings.getSetting('lutris_executable') + ' --list-games --json'
+    # Append arguments to executable path
+    try:
+        args = lutris_executable() + ' --list-games --json'
+    except:
+        xbmcgui.Dialog().ok(
+            'Lutris Not Found',
+            '1. Install Lutris from http://lutris.com',
+            '2. If Lutris is installed and the problem persists set a custom path to the executable in the add-on settings')
     if settings.getSetting('installed') in [True, 'True', 'true', 1]:
         args = args + ' --installed'
 
@@ -50,8 +65,7 @@ if mode is None:
     except:
         xbmcgui.Dialog().ok(
             'Lutris Not Found',
-            '1. Install Lutris from http://lutris.com',
-            '2. Select its executable location in the following settings')
+            '1. Make sure the Lutris executable path is correct')
         settings.openSettings()
 
     # Parse the list of games from JSON to a Python array.
@@ -62,7 +76,7 @@ if mode is None:
         xbmcgui.Dialog().ok(
             'Lutris Result Malformed',
             '1. Make sure the Lutris executable path is correct',
-            '2. Attempt launching and configuring it again')
+            '2. Attempt configuring and launching the add-on again')
         settings.openSettings()
 
     totalItems = len(games)
@@ -102,7 +116,7 @@ if mode is None:
 
 # Launch
 elif mode[0] == 'folder':
-    lutris = settings.getSetting('lutris_executable')
+    lutris = lutris_executable()
     slug = args['slug'][0]
     cmd = lutris
     if slug != 'lutris':

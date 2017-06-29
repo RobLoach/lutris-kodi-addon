@@ -3,12 +3,17 @@
     <!-- General -->
     <category label="30100">
         <!-- Lutris Executable -->
+        <setting id="use_custom_path"
+          type="bool"
+          label="30103"
+          default="false" />
+        <!-- Lutris Executable -->
         <setting id="lutris_executable"
             type="file"
             label="30101"
-            value="lutris"
-            default="lutris" />
-
+            value="/usr/bin/lutris"
+            default="/usr/bin/lutris"
+            enable="eq(-1,true)" />
         <!-- Lutris Executable -->
         <setting id="installed"
             type="bool"
