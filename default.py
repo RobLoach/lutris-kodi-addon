@@ -25,7 +25,7 @@ def build_url(query):
     return base_url + '?' + urllib.urlencode(query)
 
 # Find path to the Lutris executable
-def lutris_executable()
+def lutris_executable():
     if settings.getSetting('use_custom_path') in [True, 'True', 'true', 1]:
         path = settings.getSetting('lutris_executable')
     else:
