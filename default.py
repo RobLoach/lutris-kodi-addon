@@ -24,6 +24,14 @@ xbmcplugin.setContent(addon_handle, 'files')
 def build_url(query):
     return base_url + '?' + urllib.urlencode(query)
 
+# Find path to the Lutris executable
+def lutris_executable()
+    if settings.getSetting('use_custom_path') in [True, 'True', 'true', 1]:
+        path = settings.getSetting('lutris_executable')
+    else:
+        path = find_executable("lutris")
+    return path
+
 # Discover what the user is doing
 mode = args.get('mode', None)
 if mode is None:
@@ -39,20 +47,14 @@ if mode is None:
     li.setArt({'fanart': fanart})
     xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, totalItems=2)
 
-    # Get the path to the Lutris executable
-    if settings.getSetting('use_custom_path') in [True, 'True', 'true', 1]:
-        executable = settings.getSetting('lutris_executable')
-    else:
-        try:
-            executable = find_executable("lutris")
-        except:
-            xbmcgui.Dialog().ok(
-                'Lutris Not Found',
-                '1. Install Lutris from http://lutris.com',
-                '2. If Lutris is installed and the problem persists set a custom path to the executable in the add-on settings')
-
     # Append arguments to executable path
-    args = executable + ' --list-games --json'
+    try:
+        args = lutris_executable() + ' --list-games --json'
+    except:
+        xbmcgui.Dialog().ok(
+            'Lutris Not Found',
+            '1. Install Lutris from http://lutris.com',
+            '2. If Lutris is installed and the problem persists set a custom path to the executable in the add-on settings')
     if settings.getSetting('installed') in [True, 'True', 'true', 1]:
         args = args + ' --installed'
 
@@ -114,7 +116,7 @@ if mode is None:
 
 # Launch
 elif mode[0] == 'folder':
-    lutris = executable
+    lutris = lutris_executable()
     slug = args['slug'][0]
     cmd = lutris
     if slug != 'lutris':
