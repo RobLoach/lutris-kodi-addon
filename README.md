@@ -22,6 +22,14 @@ There are a few different ways to install the Lutris Kodi addon...
 
 1. [Install and setup Lutris](https://lutris.net/downloads/)
 
+1. [Download the latest version of the Lutris Kodi Addon](https://github.com/RobLoach/lutris-kodi-addon/archive/master.zip)
+
+1. Unzip it to `~/.kodi/addons/script.lutris`
+
+### Command Line
+
+1. [Install and setup Lutris](https://lutris.net/downloads/)
+
 1. Enter the command line interface and run the following commands:
 
     ```
