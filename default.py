@@ -52,9 +52,9 @@ if mode is None:
         args = lutris_executable() + ' --list-games --json'
     except:
         xbmcgui.Dialog().ok(
-            'Lutris Not Found',
-            '1. Install Lutris from http://lutris.com',
-            '2. If Lutris is installed and the problem persists set a custom path to the executable in the add-on settings')
+            language(30300),
+            language(30301),
+            language(30302))
     if settings.getSetting('installed') in [True, 'True', 'true', 1]:
         args = args + ' --installed'
 
@@ -64,8 +64,8 @@ if mode is None:
         result = subprocess.check_output(args, shell=True)
     except:
         xbmcgui.Dialog().ok(
-            'Lutris Not Found',
-            '1. Make sure the Lutris executable path is correct')
+            language(30300),
+            language(30303))
         settings.openSettings()
 
     # Parse the list of games from JSON to a Python array.
@@ -74,9 +74,9 @@ if mode is None:
         games = json.loads(result)
     except:
         xbmcgui.Dialog().ok(
-            'Lutris Result Malformed',
-            '1. Make sure the Lutris executable path is correct',
-            '2. Attempt configuring and launching the add-on again')
+            language(30304),
+            language(30303),
+            language(30305))
         settings.openSettings()
 
     totalItems = len(games)

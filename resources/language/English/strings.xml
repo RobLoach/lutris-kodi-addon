@@ -12,4 +12,12 @@
 
     <!-- Contextual Menu -->
     <string id="30200">Switch Runner (%s)</string>
+
+    <!-- Dialog Boxes -->
+    <string id="30300">Lutris Not Found</string>
+    <string id="30301">1. Install Lutris from http://lutris.com</string>
+    <string id="30302">2. If Lutris is installed and the problem persists set a custom path to the executable in the add-on settings</string>
+    <string id="30303">1. Make sure the Lutris executable path is correct</string>
+    <string id="30304">Lutris Result Malformed</string>
+    <string id="30305">2. Attempt configuring and launching the add-on again</string>
 </strings>
