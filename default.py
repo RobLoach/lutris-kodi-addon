@@ -30,7 +30,7 @@ def build_url(query):
 
 # Find the path to the Lutris executable
 def lutris_executable():
-    if settings.getSetting('use_custom_path') in [True, 'True', 'true', 1]:
+    if settings.getSetting('use_custom_path') == 'true':
         path = settings.getSetting('lutris_executable')
     else:
         path = find_executable("lutris")
@@ -60,7 +60,7 @@ if mode is None:
             language(30301),
             language(30302))
 
-    if settings.getSetting('installed') in [True, 'True', 'true', 1]:
+    if settings.getSetting('installed') == 'true':
         args = args + ' --installed'
 
     # Get the list of games from Lutris
