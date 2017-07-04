@@ -37,12 +37,12 @@ def lutris_executable():
 # Discover what the user is doing
 mode = args.get('mode', None)
 if mode is None:
-    fanart = settings.getAddonInfo('fanart')
     home = os.path.expanduser('~')
 
     # Add the Launch Lutris item
     title = language(30000)
-    iconImage = os.path.join(settings.getAddonInfo('path'), 'icon.png')
+    fanart = settings.getAddonInfo('fanart')
+    iconImage = settings.getAddonInfo('icon')
     url = build_url({'mode': 'folder', 'foldername': title, 'slug': 'lutris'})
     li = xbmcgui.ListItem(title, iconImage=iconImage)
     li.setArt({'fanart': fanart})
