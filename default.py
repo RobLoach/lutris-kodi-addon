@@ -35,8 +35,7 @@ def lutris_executable():
 # Discover what the user is doing
 mode = args.get('mode', None)
 if mode is None:
-    addon = xbmcaddon.Addon('script.lutris')
-    fanart = addon.getAddonInfo('fanart')
+    fanart = settings.getAddonInfo('fanart')
     home = os.path.expanduser('~')
 
     # Add the Launch Lutris item
@@ -116,9 +115,8 @@ if mode is None:
 
 # Launch
 elif mode[0] == 'folder':
-    lutris = lutris_executable()
+    cmd = lutris_executable()
     slug = args['slug'][0]
-    cmd = lutris
     if slug != 'lutris':
         cmd = cmd + ' lutris:rungame/' + slug
     if xbmc.Player().isPlaying() == True:
