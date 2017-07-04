@@ -38,6 +38,8 @@ def lutris_executable():
 
 # Discover what the user is doing
 mode = args.get('mode', None)
+
+# Construct the folder listing in Kodi
 if mode is None:
     home = os.path.expanduser('~')
 
@@ -126,6 +128,7 @@ elif mode[0] == 'folder':
     cmd = lutris_executable()
     slug = args['slug'][0]
 
+    # Construct the launch command
     if slug != 'lutris':
         cmd = cmd + ' lutris:rungame/' + slug
 
