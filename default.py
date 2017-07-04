@@ -18,13 +18,15 @@ addon_handle = int(sys.argv[1])
 args = urlparse.parse_qs(sys.argv[2][1:])
 settings = xbmcaddon.Addon(id='script.lutris')
 language = settings.getLocalizedString
+
+# Set the plugin content
 xbmcplugin.setContent(addon_handle, 'files')
 
 # Construct a URL for the Kodi navigation
 def build_url(query):
     return base_url + '?' + urllib.urlencode(query)
 
-# Find path to the Lutris executable
+# Find the path to the Lutris executable
 def lutris_executable():
     if settings.getSetting('use_custom_path') in [True, 'True', 'true', 1]:
         path = settings.getSetting('lutris_executable')
@@ -119,6 +121,8 @@ elif mode[0] == 'folder':
     slug = args['slug'][0]
     if slug != 'lutris':
         cmd = cmd + ' lutris:rungame/' + slug
+
+    # Stop playback if Kodi is playing any media
     if xbmc.Player().isPlaying() == True:
         xbmc.Player().stop()
     os.system(cmd)
