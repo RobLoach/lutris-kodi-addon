@@ -4,15 +4,16 @@
 
 ![Lutris Kodi Addon Screenshot](resources/media/screenshot.jpg "Lutris Kodi Addon")
 
+## Features
+
+- Display games managed by Lutris in Kodi
+- Launch games using Lutris from Kodi
+
 ## Prerequisites
 
 - [Install and setup Lutris](https://lutris.net/downloads/)
 
-## Install
-
-There are several different ways to install the Lutris Kodi Addon. Installing the addon through a repository is recommended.
-
-### solbero's Kodi add-on repository (recommended)
+## Install from repository
 
 1. Make sure that Unknown Sources is enabled in Settings → System → Add-ons
 
@@ -20,15 +21,7 @@ There are several different ways to install the Lutris Kodi Addon. Installing th
 
 1. Visit Home → Settings → Add-ons → Install from repository → solbero’s Kodi add-on repository → Program Add-ons → Lutris → Install
 
-### SuperRepo
-
-1. Make sure that Unknown Sources is enabled in Settings → System → Add-ons
-
-1. [Install the SuperRepo repository](https://superrepo.org/get-started/)
-
-1. Visit Home → Settings → Add-ons → Install from repository → SuperRepo → Program Add-ons → Lutris → Install
-
-### Manually
+## Install manually
 
 1. [Download the latest version of the Lutris Kodi Addon](https://github.com/RobLoach/lutris-kodi-addon/archive/master.zip)
 
