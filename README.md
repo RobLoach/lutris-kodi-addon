@@ -4,13 +4,35 @@
 
 ![Lutris Kodi Addon Screenshot](resources/media/screenshot.jpg "Lutris Kodi Addon")
 
+## Prerequisites
+
+- [Install and setup Lutris](https://lutris.net/downloads/)
+
 ## Install
+
+There are several different ways to install the Lutris Kodi Addon. Installing the addon through a repository is recommended.
+
+### solbero's Kodi add-on repository (recommended)
+
+1. Make sure that Unknown Sources is enabled in Settings → System → Add-ons
+
+1. [Install solbero's Kodi add-on repository](https://github.com/solbero/repository.solbero/blob/master/README.md)
+
+1. Visit Home → Settings → Add-ons → Install from repository → solbero’s Kodi add-on repository → Program Add-ons → Lutris → Install
+
+### SuperRepo
+
+1. Make sure that Unknown Sources is enabled in Settings → System → Add-ons
 
 1. [Install the SuperRepo repository](https://superrepo.org/get-started/)
 
-2. Visit Home -> Settings -> Addons -> Install from repository -> SuperRepo -> Program Add-ons -> Lutris -> Install
+1. Visit Home → Settings → Add-ons → Install from repository → SuperRepo → Program Add-ons → Lutris → Install
 
-3. Configure the addon to ensure the Lutris executable path is correct
+### Manually
+
+1. [Download the latest version of the Lutris Kodi Addon](https://github.com/RobLoach/lutris-kodi-addon/archive/master.zip)
+
+1. Unzip it to `~/.kodi/addons/script.lutris`
 
 ## Development
 
