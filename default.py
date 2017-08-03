@@ -50,7 +50,10 @@ if mode is None:
 
     url = build_url({'mode': 'folder', 'foldername': title, 'slug': 'lutris'})
     li = xbmcgui.ListItem(title, iconImage=iconImage)
-    li.setArt({'fanart': fanart})
+    li.setArt({
+        'fanart': fanart,
+        'thumb': iconImage
+    })
     xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, totalItems=2)
 
     # Append arguments to executable path
