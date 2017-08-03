@@ -18,15 +18,19 @@ addon_handle = int(sys.argv[1])
 args = urlparse.parse_qs(sys.argv[2][1:])
 settings = xbmcaddon.Addon(id='script.lutris')
 language = settings.getLocalizedString
+
+# Set the plugin content
 xbmcplugin.setContent(addon_handle, 'files')
+
 
 # Construct a URL for the Kodi navigation
 def build_url(query):
     return base_url + '?' + urllib.urlencode(query)
 
-# Find path to the Lutris executable
+
+# Find the path to the Lutris executable
 def lutris_executable():
-    if settings.getSetting('use_custom_path') in [True, 'True', 'true', 1]:
+    if settings.getSetting('use_custom_path') == 'true':
         path = settings.getSetting('lutris_executable')
     else:
         path = find_executable("lutris")
@@ -34,17 +38,22 @@ def lutris_executable():
 
 # Discover what the user is doing
 mode = args.get('mode', None)
+
+# Construct the folder listing in Kodi
 if mode is None:
-    addon = xbmcaddon.Addon('script.lutris')
-    fanart = addon.getAddonInfo('fanart')
     home = os.path.expanduser('~')
 
     # Add the Launch Lutris item
     title = language(30000)
-    iconImage = os.path.join(settings.getAddonInfo('path'), 'icon.png')
+    fanart = settings.getAddonInfo('fanart')
+    iconImage = settings.getAddonInfo('icon')
+
     url = build_url({'mode': 'folder', 'foldername': title, 'slug': 'lutris'})
     li = xbmcgui.ListItem(title, iconImage=iconImage)
-    li.setArt({'fanart': fanart})
+    li.setArt({
+        'fanart': fanart,
+        'thumb': iconImage
+    })
     xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, totalItems=2)
 
     # Append arguments to executable path
@@ -55,7 +64,8 @@ if mode is None:
             language(30300),
             language(30301),
             language(30302))
-    if settings.getSetting('installed') in [True, 'True', 'true', 1]:
+
+    if settings.getSetting('installed') == 'true':
         args = args + ' --installed'
 
     # Get the list of games from Lutris
@@ -85,12 +95,14 @@ if mode is None:
         name = filter(lambda x: x in string.printable, game['name'])
         slug = filter(lambda x: x in string.printable, game['slug'])
         runner = game['runner'] or ''
+
         if runner == '-':
             runner = ''
 
         # Construct the list item
         gameThumb = os.path.join(home, '.local', 'share', 'icons', 'hicolor', '32x32', 'apps', 'lutris_' + slug + '.png')
         gameBanner = os.path.join(home, '.local', 'share', 'lutris', 'banners', slug + '.jpg')
+
         li = xbmcgui.ListItem(name, runner, iconImage=gameBanner)
         li.setArt({
             'fanart': fanart,
@@ -116,11 +128,15 @@ if mode is None:
 
 # Launch
 elif mode[0] == 'folder':
-    lutris = lutris_executable()
+    cmd = lutris_executable()
     slug = args['slug'][0]
-    cmd = lutris
+
+    # Construct the launch command
     if slug != 'lutris':
         cmd = cmd + ' lutris:rungame/' + slug
+
+    # Stop playback if Kodi is playing any media
     if xbmc.Player().isPlaying() == True:
         xbmc.Player().stop()
+
     os.system(cmd)
