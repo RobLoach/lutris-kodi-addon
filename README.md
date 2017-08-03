@@ -32,7 +32,7 @@ There are several different ways to install the Lutris Kodi Addon. Installing th
 
 1. [Download the latest version of the Lutris Kodi Addon](https://github.com/RobLoach/lutris-kodi-addon/archive/master.zip)
 
-1. Go to "Settings" → "Add-ons" → "Install from zip file"
+1. Go to Settings → Add-ons → Install from zip file
 
 1. Navigate to where you placed the zip file and select “Install”
 
