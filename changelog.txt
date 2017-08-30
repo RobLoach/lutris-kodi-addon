@@ -1,4 +1,7 @@
-[B]Version 1.x: XXXX, XX[/B]
+[B]Version 1.2.1: August 30th, 2017[/B]
+
+- Fixed missing Launch Lutris thumbnail, by @solbero
+- Removed all hard-coded language strings, by @solbero
 - Better custom Lutris path support, by @solbero
 
 [B]Version 1.2.0: June 26th, 2017[/B]
