@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+    <!-- Menu -->
+    <string id="30000">Lutris Starten</string>
+    <string id="30001">Starte Lutris um Spiele zu durchsuchen und die verfügbaren Starter zu verwalten.</string>
+
+    <!-- Settings -->
+    <string id="30100">Allgemein</string>
+    <string id="30101">Pfad zur Lutris Ausführungsdatei</string>
+    <string id="30102">Nur installierte Spiele zeigen</string>
+    <string id="30103">Eigene Pfade aktivieren</string>
+
+    <!-- Contextual Menu -->
+    <string id="30200">Wechsle Starter (%s)</string>
+
+    <!-- Dialog Boxes -->
+    <string id="30300">Lutris nicht gefunden</string>
+    <string id="30301">1. Installiere Lutris von http://lutris.com</string>
+    <string id="30302">2. Sollte es auch nach der Installation noch Probleme geben, setzen Sie in den Einstellungen einen eigenen Pfad zur Lutris-Ausführungsdatei</string>
+    <string id="30303">1. Stellen Sie sicher, dass der Ausführungspfad zu Lutris korrekt eingestellt ist.</string>
+    <string id="30304">Die Antwort von Lutris hat einen falschen Aufbau</string>
+    <string id="30305">2. Versuchen Sie das Addon zu konfigurieren und neu zu starten.</string>
+</strings>
