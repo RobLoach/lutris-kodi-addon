@@ -94,6 +94,7 @@ if mode is None:
         # Filter out the unprintable Unicode characters
         name = filter(lambda x: x in string.printable, game['name'])
         slug = filter(lambda x: x in string.printable, game['slug'])
+        game_id = game['id']
         runner = game['runner'] or ''
 
         if runner == '-':
@@ -116,11 +117,11 @@ if mode is None:
         # Add the contextual menu
         commands = []
         if runner:
-            commands.append((language(30200) % (runner), 'RunPlugin(%s?mode=folder&slug=%s)' % (sys.argv[0], slug + ' --reinstall')))
+            commands.append((language(30200) % (runner), 'RunPlugin(%s?mode=folder&id=%d&slug=%s)' % (sys.argv[0], game_id, slug + ' --reinstall')))
         li.addContextMenuItems(commands)
 
         # Add the list item into the directory listing
-        url = build_url({'mode': 'folder', 'foldername': name, 'slug': slug})
+        url = build_url({'mode': 'folder', 'foldername': name, 'id': game_id, 'slug': slug})
         xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, totalItems=totalItems)
 
     # Finished the list
@@ -130,10 +131,11 @@ if mode is None:
 elif mode[0] == 'folder':
     cmd = lutris_executable()
     slug = args['slug'][0]
+    game_id = args['id'][0]
 
     # Construct the launch command
     if slug != 'lutris':
-        cmd = cmd + ' lutris:rungame/' + slug
+        cmd = cmd + ' lutris:rungameid/' + game_id
 
     # Stop playback if Kodi is playing any media
     if xbmc.Player().isPlaying() == True:
