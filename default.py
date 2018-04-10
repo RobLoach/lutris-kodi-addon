@@ -117,11 +117,11 @@ if mode is None:
         # Add the contextual menu
         commands = []
         if runner:
-            commands.append((language(30200) % (runner), 'RunPlugin(%s?mode=folder&id=%d&slug=%s)' % (sys.argv[0], game_id, slug + ' --reinstall')))
+            commands.append((language(30200) % (runner), 'RunPlugin(%s?mode=folder&id=%d&slug=%s&gamename=%s)' % (sys.argv[0], game_id, slug + ' --reinstall', name)))
         li.addContextMenuItems(commands)
 
         # Add the list item into the directory listing
-        url = build_url({'mode': 'folder', 'foldername': name, 'id': game_id, 'slug': slug})
+        url = build_url({'mode': 'folder', 'foldername': name, 'id': game_id, 'slug': slug, 'gamename': name})
         xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, totalItems=totalItems)
 
     # Finished the list
@@ -132,6 +132,10 @@ elif mode[0] == 'folder':
     cmd = lutris_executable()
     slug = args['slug'][0]
     game_id = args['id'][0]
+    name = args['gamename'][0]
+
+    # Display a notification to let the user know the game is launching.
+    xbmcgui.Dialog().notification(name, language(30002), settings.getAddonInfo('icon'))
 
     # Construct the launch command
     if slug != 'lutris':
