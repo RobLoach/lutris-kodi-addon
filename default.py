@@ -132,7 +132,7 @@ elif mode[0] == 'folder':
     cmd = lutris_executable()
     slug = args['slug'][0]
     game_id = args['id'][0]
-    name = args['gamename'][0]
+    name = filter(lambda x: x in string.printable, args['gamename'][0])
 
     # Display a notification to let the user know the game is launching.
     xbmcgui.Dialog().notification(name, language(30002), settings.getAddonInfo('icon'))
