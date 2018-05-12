@@ -39,5 +39,6 @@ git status
 
 ## About
 
-- Author: [Rob Loach](http://robloach.net)
-- Source: [GitHub](http://github.com/RobLoach/script.lutris/)
+- [Rob Loach](http://github.com/RobLoach)
+- [solbero](https://github.com/solbero)
+- [Source](https://github.com/RobLoach/lutris-kodi-addon)
