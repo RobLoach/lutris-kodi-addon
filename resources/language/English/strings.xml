@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <strings>
-    <!-- Menu -->
+    <!-- General -->
     <string id="30000">Launch Lutris</string>
     <string id="30001">Run Lutris to allow browsing games and managing available runners.</string>
+    <string id="30002">Launching the application.</string>
 
     <!-- Settings -->
     <string id="30100">General</string>
