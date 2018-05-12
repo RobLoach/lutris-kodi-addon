@@ -3,7 +3,7 @@
     <!-- General -->
     <string id="30000">Launch Lutris</string>
     <string id="30001">Run Lutris to allow browsing games and managing available runners</string>
-    <string id="30002">Launching</string>
+    <string id="30002">Launching %s</string>
 
     <!-- Settings -->
     <string id="30100">General</string>
