@@ -136,9 +136,8 @@ elif mode[0] == 'folder':
     # Display a notification to let the user know the game is launching.
     game_name = filter(lambda x: x in string.printable, args['gamename'][0])
     addon_name = settings.getAddonInfo('name')
-    notification = ' '.join([language(30002), game_name])
 
-    xbmcgui.Dialog().notification(addon_name, notification, settings.getAddonInfo('icon'))
+    xbmcgui.Dialog().notification(addon_name, language(30002) % (game_name), settings.getAddonInfo('icon'))
 
     # Construct the launch command
     if slug != 'lutris':
