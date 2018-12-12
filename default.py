@@ -147,4 +147,10 @@ elif mode[0] == 'folder':
     if xbmc.Player().isPlaying() == True:
         xbmc.Player().stop()
 
+    # Get Users shutdowntimer value and save it so we can reset it to users value after the game has been quitted
+    dpmssetting = json.loads(xbmc.executeJSONRPC('{ "jsonrpc": "2.0", "id": 0, "method": "Settings.getSettingValue", "params" : {"setting": "powermanagement.shutdowntime"} }'))
+    # Disable Shutdowntimer (Set Value to 0)
+    xbmcsetting = xbmc.executeJSONRPC('{ "jsonrpc": "2.0", "id": 0, "method": "Settings.SetSettingValue", "params" : {"setting": "powermanagement.shutdowntime", "value": 0} }')
     os.system(cmd)
+    # Reset shutdowntimer to users value
+    xbmcsetting = xbmc.executeJSONRPC('{ "jsonrpc": "2.0", "id": 0, "method": "Settings.SetSettingValue", "params" : {"setting": "powermanagement.shutdowntime", "value": ' + str(dpmssetting['result']['value']) + '} }')
