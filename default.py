@@ -20,7 +20,7 @@ settings = xbmcaddon.Addon(id='script.lutris')
 language = settings.getLocalizedString
 
 # Set the plugin content
-xbmcplugin.setContent(addon_handle, 'files')
+xbmcplugin.setContent(addon_handle, 'games')
 
 
 # Construct a URL for the Kodi navigation
