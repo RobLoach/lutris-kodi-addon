@@ -44,7 +44,7 @@ if mode is None:
     home = os.path.expanduser('~')
 
     # Add the Launch Lutris item
-    title = language(30000)
+    title = 'Lutris'
     fanart = settings.getAddonInfo('fanart')
     iconImage = settings.getAddonInfo('icon')
 
@@ -124,8 +124,12 @@ if mode is None:
         url = build_url({'mode': 'folder', 'foldername': name, 'id': game_id, 'slug': slug, 'gamename': name})
         xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, totalItems=totalItems)
 
+        # Add sort method for list items
+        xbmcplugin.addSortMethod(handle=addon_handle, sortMethod=xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
+
     # Finished the list
     xbmcplugin.endOfDirectory(addon_handle)
+
 
 # Launch
 elif mode[0] == 'folder':
