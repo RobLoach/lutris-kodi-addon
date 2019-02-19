@@ -2,7 +2,7 @@
 <addon
     id="script.lutris"
     name="Lutris"
-    version="1.3.0"
+    version="1.3.1"
     provider-name="Rob Loach">
     <requires>
         <import addon="xbmc.python" version="2.19.0" />
@@ -12,7 +12,7 @@
     </extension>
     <extension point="xbmc.addon.metadata">
         <summary lang="en">Lutris</summary>
-        <description lang="en">Open Gaming Platform to install and launch games from within Kodi. You need to have Lutris installed to use this add-on.</description>
+        <description lang="en">Lutris Kodi Addon is a frontent for Lutris in Kodi. You need to have Lutris installed to use this add-on.</description>
         <disclaimer lang="en">For more information, visit Lutris.net.</disclaimer>
         <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
         <website>http://lutris.net</website>
