@@ -148,7 +148,7 @@ elif mode[0] == 'folder':
         cmd = cmd + ' lutris:rungameid/' + game_id
 
     # Stop playback if Kodi is playing any media
-    if xbmc.Player().isPlaying() is True:
+    if xbmc.Player().isPlaying():
         xbmc.Player().stop()
 
     # Get Users shutdowntimer value and save it so we can reset it to users value after the game has been quitted
