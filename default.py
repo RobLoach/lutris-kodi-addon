@@ -20,7 +20,7 @@ settings = xbmcaddon.Addon(id='script.lutris')
 language = settings.getLocalizedString
 
 # Set the plugin content
-xbmcplugin.setContent(addon_handle, 'games')
+xbmcplugin.setContent(addon_handle, 'files')
 
 
 # Construct a URL for the Kodi navigation
@@ -44,7 +44,7 @@ if mode is None:
     home = os.path.expanduser('~')
 
     # Add the Launch Lutris item
-    title = 'Lutris'
+    title = language(30000)
     fanart = settings.getAddonInfo('fanart')
     iconImage = settings.getAddonInfo('icon')
 
@@ -117,19 +117,15 @@ if mode is None:
         # Add the contextual menu
         commands = []
         if runner:
-            commands.append((language(30200) % (runner), 'RunPlugin(%s?mode=folder&id=%d&slug=%s&gamename=%s)' % (base_url, game_id, slug + ' --reinstall', name)))
+            commands.append((language(30200).format(runner), 'RunPlugin({0}?mode=folder&id={1}&slug={2} --reinstall&gamename={3})'.format(sys.argv[0], game_id, slug, name)))
         li.addContextMenuItems(commands)
 
         # Add the list item into the directory listing
         url = build_url({'mode': 'folder', 'foldername': name, 'id': game_id, 'slug': slug, 'gamename': name})
         xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, totalItems=totalItems)
 
-        # Add sort method for list items
-        xbmcplugin.addSortMethod(handle=addon_handle, sortMethod=xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
-
     # Finished the list
     xbmcplugin.endOfDirectory(addon_handle)
-
 
 # Launch
 elif mode[0] == 'folder':
@@ -141,24 +137,20 @@ elif mode[0] == 'folder':
     game_name = filter(lambda x: x in string.printable, args['gamename'][0])
     addon_name = settings.getAddonInfo('name')
 
-    xbmcgui.Dialog().notification(addon_name, language(30002) % (game_name), settings.getAddonInfo('icon'))
+    xbmcgui.Dialog().notification(addon_name, language(30002).format(game_name), settings.getAddonInfo('icon'))
 
     # Construct the launch command
     if slug != 'lutris':
         cmd = cmd + ' lutris:rungameid/' + game_id
 
     # Stop playback if Kodi is playing any media
-    if xbmc.Player().isPlaying() is True:
+    if xbmc.Player().isPlaying() == True:
         xbmc.Player().stop()
 
     # Get Users shutdowntimer value and save it so we can reset it to users value after the game has been quitted
     dpmssetting = json.loads(xbmc.executeJSONRPC('{ "jsonrpc": "2.0", "id": 0, "method": "Settings.getSettingValue", "params" : {"setting": "powermanagement.shutdowntime"} }'))
-
     # Disable Shutdowntimer (Set Value to 0)
     xbmcsetting = xbmc.executeJSONRPC('{ "jsonrpc": "2.0", "id": 0, "method": "Settings.SetSettingValue", "params" : {"setting": "powermanagement.shutdowntime", "value": 0} }')
-
-    # Launch Lutris
     os.system(cmd)
-
     # Reset shutdowntimer to users value
     xbmcsetting = xbmc.executeJSONRPC('{ "jsonrpc": "2.0", "id": 0, "method": "Settings.SetSettingValue", "params" : {"setting": "powermanagement.shutdowntime", "value": ' + str(dpmssetting['result']['value']) + '} }')
