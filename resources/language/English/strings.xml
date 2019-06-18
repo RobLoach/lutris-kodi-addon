@@ -3,7 +3,7 @@
     <!-- General -->
     <string id="30000">Launch Lutris</string>
     <string id="30001">Run Lutris to allow browsing games and managing available runners</string>
-    <string id="30002">Launching %s</string>
+    <string id="30002">Launching {}</string>
 
     <!-- Settings -->
     <string id="30100">General</string>
@@ -12,7 +12,7 @@
     <string id="30103">Enable Custom Path</string>
 
     <!-- Contextual Menu -->
-    <string id="30200">Switch Runner (%s)</string>
+    <string id="30200">Switch Runner ({})</string>
 
     <!-- Dialog Boxes -->
     <string id="30300">Lutris Not Found</string>

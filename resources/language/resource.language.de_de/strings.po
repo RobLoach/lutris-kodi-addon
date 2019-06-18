@@ -1,0 +1,81 @@
+# Kodi Media Center language file
+# Addon Name: lutris-kodi-addon
+# Addon id: script.lutris
+# Addon Provider: RobLoach
+msgid ""
+msgstr ""
+"Project-Id-Version: Kodi Addons\n"
+"Report-Msgid-Bugs-To: https://github.com/RobLoach/lutris-kodi-addon/issues\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: arustler\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# General
+
+msgctxt "#30000"
+msgid "Lutris Starten"
+msgstr "Lutris Starten"
+
+msgctxt "#30001"
+msgid "Starte Lutris um Spiele zu durchsuchen und die verfügbaren Starter zu verwalten."
+msgstr "Starte Lutris um Spiele zu durchsuchen und die verfügbaren Starter zu verwalten."
+
+msgctxt "#30002"
+msgid "Starte {}"
+msgstr "Starte {}"
+
+# Settings
+
+msgctxt "#30100"
+msgid "Allgemein"
+msgstr "Allgemein"
+
+msgctxt "#30101"
+msgid "Pfad zur Lutris Ausführungsdatei"
+msgstr "Pfad zur Lutris Ausführungsdatei"
+
+msgctxt "#30102"
+msgid "Nur installierte Spiele zeigen"
+msgstr "Nur installierte Spiele zeigen"
+
+msgctxt "#30103"
+msgid "Eigene Pfade aktivieren"
+msgstr "Eigene Pfade aktivieren"
+
+# Contextual Menu
+
+msgctxt "#30200"
+msgid "Wechsle Starter ({})"
+msgstr "Wechsle Starter ({})"
+
+# Dialog Boxes
+
+msgctxt "#30300"
+msgid "Lutris nicht gefunden"
+msgstr "Lutris nicht gefunden"
+
+msgctxt "#30301"
+msgid "1. Installiere Lutris von http://lutris.com"
+msgstr "1. Installiere Lutris von http://lutris.com"
+
+msgctxt "#30302"
+msgid "2. Sollte es auch nach der Installation noch Probleme geben, setzen Sie in den Einstellungen einen eigenen Pfad zur Lutris-Ausführungsdatei"
+msgstr "2. Sollte es auch nach der Installation noch Probleme geben, setzen Sie in den Einstellungen einen eigenen Pfad zur Lutris-Ausführungsdatei"
+
+msgctxt "#30303"
+msgid "1. Stellen Sie sicher, dass der Ausführungspfad zu Lutris korrekt eingestellt ist."
+msgstr "1. Stellen Sie sicher, dass der Ausführungspfad zu Lutris korrekt eingestellt ist."
+
+msgctxt "#30304"
+msgid "Die Antwort von Lutris hat einen falschen Aufbau"
+msgstr "Die Antwort von Lutris hat einen falschen Aufbau"
+
+msgctxt "#30305"
+msgid "2. Versuchen Sie das Addon zu konfigurieren und neu zu starten."
+msgstr "2. Versuchen Sie das Addon zu konfigurieren und neu zu starten."
