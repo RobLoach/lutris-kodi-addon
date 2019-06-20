@@ -117,7 +117,7 @@ if mode is None:
         # Add the contextual menu
         commands = []
         if runner:
-            commands.append((language(30200) % (runner), 'RunPlugin(%s?mode=folder&id=%d&slug=%s&gamename=%s)' % (base_url, game_id, slug + ' --reinstall', name)))
+            commands.append((language(30200).format(runner), 'RunPlugin({0}?mode=folder&id={1}&slug={2} --reinstall&gamename={3})'.format(sys.argv[0], game_id, slug, name)))
         li.addContextMenuItems(commands)
 
         # Add the list item into the directory listing
@@ -141,7 +141,7 @@ elif mode[0] == 'folder':
     game_name = filter(lambda x: x in string.printable, args['gamename'][0])
     addon_name = settings.getAddonInfo('name')
 
-    xbmcgui.Dialog().notification(addon_name, language(30002) % (game_name), settings.getAddonInfo('icon'))
+    xbmcgui.Dialog().notification(addon_name, language(30002).format(game_name), settings.getAddonInfo('icon'))
 
     # Construct the launch command
     if slug != 'lutris':
