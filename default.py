@@ -117,7 +117,10 @@ if mode is None:
         # Add the contextual menu
         commands = []
         if runner:
-            commands.append((language(30200).format(runner), 'RunPlugin({0}?mode=folder&id={1}&slug={2} --reinstall&gamename={3})'.format(sys.argv[0], game_id, slug, name)))
+            commands.append((language(30200).format(runner),
+                             'RunPlugin({0}?mode=folder&id={1}&slug={2} --reinstall&gamename={3})'.format(base_url,
+                                                                                                          game_id, slug,
+                                                                                                          name)))
         li.addContextMenuItems(commands)
 
         # Add the list item into the directory listing
