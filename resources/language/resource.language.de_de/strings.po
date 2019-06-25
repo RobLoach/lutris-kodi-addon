@@ -48,6 +48,14 @@ msgctxt "#30103"
 msgid "Eigene Pfade aktivieren"
 msgstr "Eigene Pfade aktivieren"
 
+msgctxt "#30104"
+msgid "Lutris.net Benutzername"
+msgstr "Lutris.net Benutzername"
+
+msgctxt "#30105"
+msgid "Lutris.net Passwort"
+msgstr "Lutris.net Passwort"
+
 # Contextual Menu
 
 msgctxt "#30200"

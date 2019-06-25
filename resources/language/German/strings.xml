@@ -9,6 +9,8 @@
     <string id="30101">Pfad zur Lutris Ausführungsdatei</string>
     <string id="30102">Nur installierte Spiele zeigen</string>
     <string id="30103">Eigene Pfade aktivieren</string>
+    <string id="30104">Lutris.net Benutzername</string>
+    <string id="30105">Lutris.net Passwort</string>
 
     <!-- Contextual Menu -->
     <string id="30200">Wechsle Starter (%s)</string>

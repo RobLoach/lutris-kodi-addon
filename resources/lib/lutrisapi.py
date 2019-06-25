@@ -1,6 +1,7 @@
 import requests
+import simplejson as json
 import xbmc
-import json
+
 
 # TODO: perform full functionality test
 
@@ -21,7 +22,7 @@ class LutrisAPI(object):
         Generate Token for user specific API calls
         :return: Nothing
         """
-        if self.username == None or self.password == None:
+        if self.username is None or self.password is None:
             return
 
         url = self.api + '/accounts/token'
@@ -59,6 +60,23 @@ class LutrisAPI(object):
         data = json.loads(response)
         return data
 
+    def getGameBySlug(self, slug):
+        """
+        Get game information from Lutris.net providing the game slug
+        :param slug: Lutris.net game slug
+        :return: dictonary with game information
+        """
+        url = self.api + '/games/{slug}'.format(slug=slug)
+
+        try:
+            response = requests.get(url)
+        except requests.exceptions.HTTPError as err:
+            xbmc.log('Request Error Lutris API: {0}'.format(err), xbmc.LOGWARNING)
+            return err
+
+        data = json.loads(response)
+        return data
+
     def getRunners(self):
         """
         Get all Runners from Lutris.net
@@ -80,12 +98,11 @@ class LutrisAPI(object):
         Get user specific games library
         :return: Returns a user library from Lutris.net
         """
-        if self.username == None or self.password == None:
+        if self.username is None or self.password is None:
             return
 
-        if self.token == None
+        if self.token is None:
             self.genToken()
-
 
         url = self.api + '/games/library/{username}'.format(username=self.username)
 
@@ -101,3 +118,28 @@ class LutrisAPI(object):
 
         data = json.loads(response)
         return data
+
+    def getIcon(self, icon_url):
+        """
+        Get the .png icon from the Lutris Server
+        :param icon_url: Lutris.net icon url
+        :return: File Object
+        """
+        url = self.api + icon_url
+
+        try:
+            response = requests.get(url)
+        except requests.exceptions.HTTPError as err:
+            xbmc.log('Request Error Lutris API: {0}'.format(err), xbmc.LOGWARNING)
+            return err
+
+        return response
+
+    def getBanner(self, banner_url):
+        """
+        Get the .jpg banner from the Lutris Server
+        :param banner_url:
+        :return: File Object
+        """
+
+        return self.getIcon(banner_url)

@@ -4,17 +4,20 @@
 # Created on: ???
 # License: GPL v.2 https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
-import json
 import os
 import sys
 import urllib
+
+import simplejson as json
 import urlparse
 import xbmc
 import xbmcaddon
 import xbmcgui
 import xbmcplugin
-from subprocess import check_output
-from distutils.spawn import find_executable
+
+from resources.lib.helpers import *
+from resources.lib.lutrisapi import LutrisAPI
+from resources.lib.lutriscmd import LutrisCMD
 
 # Get the plugin url in plugin:// notation.
 base_url = sys.argv[0]
@@ -24,38 +27,22 @@ addon_handle = int(sys.argv[1])
 addon_settings = xbmcaddon.Addon(id='script.lutris')
 # Get the addon name from addon settings
 addon_name = addon_settings.getAddonInfo('name')
+# Plugin User Data Folder
+userdata = addon_settings.getAddonInfo('path')
+# Lutris User Data Folder
+lutris_data = os.path.join(os.path.expanduser('~'), '.local', 'share', 'lutris')
 # Get the localized string from addon settings
 localized_string = addon_settings.getLocalizedString
+# Create a Lutris API Client
+LutrisClient = LutrisAPI()
+# Create a Lutris CMD Client
 
-
-def log(msg, level=xbmc.LOGDEBUG):
-    """
-    Output message to kodi.log file.
-
-    :param msg: message to output
-    :param level: debug levelxbmc. Values:
-    xbmc.LOGDEBUG = 0
-    xbmc.LOGERROR = 4
-    xbmc.LOGFATAL = 6
-    xbmc.LOGINFO = 1
-    xbmc.LOGNONE = 7
-    xbmc.LOGNOTICE = 2
-    xbmc.LOGSEVERE = 5
-    xbmc.LOGWARNING = 3
-    """
-    # Write error message to kodi.log
-    log_message = u'{0}: {1}'.format(addon_name, msg, )
-    xbmc.log(log_message, level)
-
-
-def notify(msg):
-    """
-    Send  kodi dialog notification to the user.
-
-    :param msg: Message to display
-    :type kwargs: string
-    """
-    xbmcgui.Dialog().notification(addon_name, msg, xbmcgui.NOTIFICATION_INFO)
+executable = None
+# Check if the user has specified a custom path to the lutris executable
+if addon_settings.getSetting('use_custom_path') == 'true':
+    # Get the path from addon settings
+    executable = addon_settings.getSetting('lutris_executable')
+Lutris = LutrisCMD(executable)
 
 
 def get_url(**kwargs):
@@ -70,103 +57,6 @@ def get_url(**kwargs):
     return '{0}?{1}'.format(base_url, urllib.urlencode(kwargs))
 
 
-def lutris(args=None):
-    """
-    Get the path to the lutris executable and append optional command line arguments.
-
-    note:: Possible arguments for the lutris executable are:
-    -v, --version              Print the version of Lutris and exit
-    -d, --debug                Show debug messages
-    -i, --install              Install a game from a yml file
-    -e, --exec                 Execute a program with the lutris runtime
-    -l, --list-games           List all games in database
-    -o, --installed            Only list installed games
-    -s, --list-steam-games     List available Steam games
-    --list-steam-folders       List all known Steam library folders
-    -j, --json                 Display the list of games in JSON format
-    --reinstall                Reinstall game
-    --display=DISPLAY          X display to use
-
-    :param args: arguments to append to the lutris command
-    :type args: string
-    :return: the path to the lutris executable with optional arguments
-    :rtype: string
-    """
-    # Check if the user has specified a custom path to the lutris executable
-    if addon_settings.getSetting('use_custom_path') == 'true':
-        # Get the path from addon settings
-        executable = addon_settings.getSetting('lutris_executable')
-    else:
-        # Find the path to the lutris executable
-        executable = find_executable("lutris")
-    # Print the excecutable path to the log
-    log(executable, level=xbmc.LOGDEBUG)
-    if args is not None:
-        # Append command arguments to executable path
-        executable = executable + args
-    return executable
-
-
-def get_games():
-    """
-    Get a list of installed games from lutris as a JSON object and convert it to a Python array.
-
-    note::  JSON object returned from Lutris looks as follows:
-    [
-      {
-        "id": 74,
-        "slug": "a-story-about-my-uncle",
-        "name": "A Story About My Uncle",
-        "runner": "steam",
-        "directory": ""
-      },
-      {
-        ...
-      }
-    ]
-
-    :return: list of installed games
-    :rtype: list
-    """
-    try:
-        # Get the list of games from Lutris as JSON
-        cmd = lutris(' --list-games --json --installed')
-        result = check_output(cmd, shell=True)
-    except Exception as e:
-        # Log error if list could not be found
-        log(e, level=xbmc.LOGERROR)
-    # Parse the list of games from JSON to a Python array.
-    try:
-        games = json.loads(result)
-    except Exception as e:
-        # Log error if JSON could not be opened
-        log(e, level=xbmc.LOGERROR)
-    return games
-
-
-def convert_to_utf8(li):
-    """
-    Take a list containing nested dictionaries and encode the dictionary values to unicode.
-
-    :param li: list of nested dicts
-    :type li: list
-    :return: list of nested dicts
-    :rtype: list
-    """
-    for item in li:
-        # Check if item is a list
-        if isinstance(item, list):
-            # Run the function recursely on the list
-            convert_to_utf8(item)
-        # Check if item is a dict
-        elif isinstance(item, dict):
-            # Iterate over the keys in the dict
-            for key, value in item.iteritems():
-                # Convert value to UTF8 and store to original key
-                item[key] = unicode(value).encode('utf-8')
-    return li
-
-
 def list_games():
     """Create the list of games in the Kodi interface."""
     # Set plugin category. It is displayed in some skins as the name
@@ -174,7 +64,7 @@ def list_games():
     xbmcplugin.setPluginCategory(addon_handle, 'My Lutris Collection')
     # Set plugin content. It allows Kodi to select appropriate views
     # for this type of content.
-    xbmcplugin.setContent(addon_handle, 'files')
+    xbmcplugin.setContent(addon_handle, 'games')
     # Create a list to hold the games
     list_items = []
     # Add the Launch Lutris item
@@ -187,22 +77,51 @@ def list_games():
     # Add the item to item list
     list_items.append((url, li, is_folder))
     # Get list of games and convert to UTF8
-    games = convert_to_utf8(get_games())
+    games = convert_to_utf8(Lutris.listGames(installed=True, json=False))
     # Iterate through the games
     for game in games:
         # Create a list item with a text label and a thumbnail image.
         li = xbmcgui.ListItem(label=game['name'])
+        # Get game information and artwork from Lutris.net if possible and save to local userdata folder
+        icon_path = os.path.join(lutris_data, 'icons', gamedata['slug'] + '.png')
+        banner_path = os.path.join(lutris_data, 'banners', gamedata['slug'] + '.jpg')
+        info_path = os.path.join(userdata, gamedata['slug'] + '.json')
+        try:
+            gamedata = LutrisClient.getGameBySlug(game['slug'])
+            if not os.path.exists(icon_path) and gamedata['icon_url'] is not None:
+                icon = LutrisClient.getIcon(gamedata['icon_url'])
+                with open(icon_path, 'wb') as f:
+                    f.write(icon.content)
+            if not os.path.exists(icon_path) and gamedata['icon_url'] is not None:
+                banner = LutrisClient.getBanner(gamedata['banner_url'])
+                with open(banner_path, 'wb') as f:
+                    f.write(banner.content)
+            if not os.path.exists(info_path):
+                with open(info_path, 'wb') as f:
+                    json.dumps(gamedata, f)
+        except:
+            xbmc.log('{0}: Failed to fetch Artwork from Lutris.net'.format(addon_name), xbmc.LOGWARNING)
+
+        # Get the local artwork
+        game['icon'] = os.path.join(lutris_data, 'icons', game['slug'] + '.png')
+        game['banner'] = os.path.join(lutris_data, 'banners', game['slug'] + '.jpg')
+        game['platform'] = ""
+        game['genre'] = []
+        with open(info_path, 'r') as f:
+            data = json.load(f)
+            for platform in data['platforms']:
+                game['platform'] += '{0},'.format(platform['name'])
+            for genre in data['genres']:
+                game['genre'].append(genre['name'])
+        # Set graphics (thumbnail, fanart, banner, poster, landscape etc.) for the list item.
+        li.setArt({'thumb': game['icon'], 'icon': game['icon'], 'banner': game['banner']})
         # Set info (title, platform, genres, publisher, developer, overview, year, gameclient) for the list item.
         # For available properties see the following link:
         # https://codedocs.xyz/xbmc/xbmc/group__python__xbmcgui__listitem.html#ga0b71166869bda87ad744942888fb5f14
-        li.setInfo('game', {'title': game['name'], 'gameclient': game['runner']})
-        # Expand the path to the users home folder
-        home = os.path.expanduser('~')
-        # Get the local artwork
-        game['icon'] = os.path.join(home, '.local', 'share', 'icons', 'hicolor', '128x128', 'apps', 'lutris_' + game['slug'] + '.png')
-        game['banner'] = os.path.join(home, '.local', 'share', 'lutris', 'banners', game['slug'] + '.jpg')
-        # Set graphics (thumbnail, fanart, banner, poster, landscape etc.) for the list item.
-        li.setArt({'thumb': game['icon'], 'icon': game['icon'], 'banner': game['banner']})
+        li.setInfo('game', {'title': game['name'],
+                            'platform': game['platform'],
+                            'genres': game['genres'],
+                            'gameclient': game['runner']})
         # Set 'IsPlayable' property to 'true'. This is mandatory for playable items!
         li.setProperty('IsPlayable', 'true')
         # Create list to hold context meny items
@@ -227,31 +146,6 @@ def list_games():
     xbmcplugin.endOfDirectory(addon_handle)
 
 
-def play_game(id_, name):
-    """
-    Play a game by the provided id.
-
-    :param id: fully-qualified game id
-    :type path: string
-    :param name: Fully qualified game name
-    :type name: string
-    """
-    # Construct the launch command
-    if name != 'Lutris':
-        cmd = lutris(' lutris:rungameid/' + id_)
-    else:
-        cmd = lutris()
-    # Stop playback if Kodi is playing any media
-    if xbmc.Player().isPlaying():
-        xbmc.Player().stop()
-    # Notify user that game is launching
-    notify(localized_string(30002).format(name))
-    # Log lutris command to kodi.log
-    log(cmd, level=xbmc.LOGDEBUG)
-    # Launch Lutris
-    os.system(cmd)
-
-
 def router(paramstring):
     """
     Router function that calls other functions depending on the provided paramstring.
@@ -263,17 +157,14 @@ def router(paramstring):
     # {<parameter>: <value>} elements
     params = dict(urlparse.parse_qsl(paramstring))
     # Check the parameters passed to the plugin
-    print params
-    if 'content_type' in params:
-        list_games()
-    elif params['action'] == 'play':
+    if params['action'] == 'play':
         # Play a game from a provided URL.
-        play_game(params['id'], params['name'])
+        # Notify user that game is launching
+        xbmcgui.Dialog().notification(addon_name, localized_string(30002).format(params['name']),
+                                      xbmcgui.NOTIFICATION_INFO)
+        Lutris.playGame(params['id'])
     else:
-        # If the provided paramstring does not contain a supported action
-        # we raise an exception. This helps to catch coding errors,
-        # e.g. typos in action names.
-        raise ValueError('Invalid paramstring: {0}!'.format(paramstring))
+        list_games()
 
 if __name__ == '__main__':
     # Call the router function and pass the plugin call parameters to it.

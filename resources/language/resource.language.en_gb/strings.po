@@ -48,6 +48,14 @@ msgctxt "#30103"
 msgid "Enable Custom Path"
 msgstr "Enable Custom Path"
 
+msgctxt "#30104"
+msgid "Lutris.net Username"
+msgstr "Lutris.net Username"
+
+msgctxt "#30105"
+msgid "Lutris.net Password"
+msgstr "Lutris.net Password"
+
 # Contextual Menu
 
 msgctxt "#30200"
