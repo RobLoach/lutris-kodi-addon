@@ -1,5 +1,4 @@
 import requests
-import simplejson as json
 import xbmc
 
 
@@ -40,7 +39,7 @@ class LutrisAPI(object):
             xbmc.log('Request Error Lutris API: {0}'.format(err), xbmc.LOGWARNING)
             return err
 
-        data = json.loads(response)
+        data = response.json()
         self.token = data["token"]
         return self.token
 
@@ -57,7 +56,7 @@ class LutrisAPI(object):
             xbmc.log('Request Error Lutris API: {0}'.format(err), xbmc.LOGWARNING)
             return err
 
-        data = json.loads(response)
+        data = response.json()
         return data
 
     def getGameBySlug(self, slug):
@@ -74,7 +73,8 @@ class LutrisAPI(object):
             xbmc.log('Request Error Lutris API: {0}'.format(err), xbmc.LOGWARNING)
             return err
 
-        data = json.loads(response)
+        response.encoding = 'utf-8'
+        data = response.json()
         return data
 
     def getRunners(self):
@@ -90,7 +90,7 @@ class LutrisAPI(object):
             xbmc.log('Request Error Lutris API: {0}'.format(err), xbmc.LOGWARNING)
             return err
 
-        data = json.loads(response)
+        data = response.json()
         return data
 
     def getLibrary(self):
@@ -116,7 +116,7 @@ class LutrisAPI(object):
             xbmc.log('Request Error Lutris API: {0}'.format(err), xbmc.LOGWARNING)
             return err
 
-        data = json.loads(response)
+        data = response.json()
         return data
 
     def getIcon(self, icon_url):

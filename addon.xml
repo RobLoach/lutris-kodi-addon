@@ -10,7 +10,7 @@
         <import addon="script.module.simplejson" version="3.16.1"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>executable</provides>
+        <provides>game executable</provides>
     </extension>
     <extension point="xbmc.addon.metadata">
         <summary lang="en">Lutris</summary>

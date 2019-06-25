@@ -15,9 +15,9 @@ import xbmcaddon
 import xbmcgui
 import xbmcplugin
 
-from resources.lib.helpers import *
-from resources.lib.lutrisapi import LutrisAPI
-from resources.lib.lutriscmd import LutrisCMD
+import resources.lib.helpers as helpers
+import resources.lib.lutrisapi as LutrisAPI
+import resources.lib.lutriscmd as LutrisCMD
 
 # Get the plugin url in plugin:// notation.
 base_url = sys.argv[0]
@@ -34,7 +34,7 @@ lutris_data = os.path.join(os.path.expanduser('~'), '.local', 'share', 'lutris')
 # Get the localized string from addon settings
 localized_string = addon_settings.getLocalizedString
 # Create a Lutris API Client
-LutrisClient = LutrisAPI()
+LutrisClient = LutrisAPI.LutrisAPI()
 # Create a Lutris CMD Client
 
 executable = None
@@ -42,7 +42,7 @@ executable = None
 if addon_settings.getSetting('use_custom_path') == 'true':
     # Get the path from addon settings
     executable = addon_settings.getSetting('lutris_executable')
-Lutris = LutrisCMD(executable)
+Lutris = LutrisCMD.LutrisCMD(executable)
 
 
 def get_url(**kwargs):
@@ -77,51 +77,65 @@ def list_games():
     # Add the item to item list
     list_items.append((url, li, is_folder))
     # Get list of games and convert to UTF8
-    games = convert_to_utf8(Lutris.listGames(installed=True, json=False))
+    games = helpers.convert_to_utf8(Lutris.listGames(installed=True, json=False))
     # Iterate through the games
     for game in games:
-        # Create a list item with a text label and a thumbnail image.
-        li = xbmcgui.ListItem(label=game['name'])
         # Get game information and artwork from Lutris.net if possible and save to local userdata folder
-        icon_path = os.path.join(lutris_data, 'icons', gamedata['slug'] + '.png')
-        banner_path = os.path.join(lutris_data, 'banners', gamedata['slug'] + '.jpg')
-        info_path = os.path.join(userdata, gamedata['slug'] + '.json')
-        try:
-            gamedata = LutrisClient.getGameBySlug(game['slug'])
-            if not os.path.exists(icon_path) and gamedata['icon_url'] is not None:
-                icon = LutrisClient.getIcon(gamedata['icon_url'])
-                with open(icon_path, 'wb') as f:
-                    f.write(icon.content)
-            if not os.path.exists(icon_path) and gamedata['icon_url'] is not None:
-                banner = LutrisClient.getBanner(gamedata['banner_url'])
-                with open(banner_path, 'wb') as f:
-                    f.write(banner.content)
-            if not os.path.exists(info_path):
-                with open(info_path, 'wb') as f:
-                    json.dumps(gamedata, f)
-        except:
-            xbmc.log('{0}: Failed to fetch Artwork from Lutris.net'.format(addon_name), xbmc.LOGWARNING)
+        icon_path = os.path.join(lutris_data, 'icons', game['slug'] + '.png')
+        banner_path = os.path.join(lutris_data, 'banners', game['slug'] + '.jpg')
+        info_path = os.path.join(userdata, game['slug'] + '.json')
+        game['platform'] = ""
+        game['genres'] = []
+
+        if not os.path.exists(icon_path) or not os.path.exists(banner_path) or not os.path.exists(info_path):
+            try:
+                gamedata = LutrisClient.getGameBySlug(game['slug'])
+                if not os.path.exists(icon_path) and gamedata['icon_url'] is not None:
+                    icon = LutrisClient.getIcon(gamedata['icon_url'])
+                    with open(icon_path, 'wb') as f:
+                        f.write(icon.content)
+                if not os.path.exists(icon_path) and gamedata['icon_url'] is not None:
+                    banner = LutrisClient.getBanner(gamedata['banner_url'])
+                    with open(banner_path, 'wb') as f:
+                        f.write(banner.content)
+                if not os.path.exists(info_path):
+                    with open(info_path, 'w') as f:
+                        json.dump(gamedata, f)
+            except Exception as err:
+                xbmc.log('{0}: Failed to retrieve gamedata for {1}'.format(addon_name, game['slug']),
+                         level=xbmc.LOGWARNING)
 
         # Get the local artwork
         game['icon'] = os.path.join(lutris_data, 'icons', game['slug'] + '.png')
         game['banner'] = os.path.join(lutris_data, 'banners', game['slug'] + '.jpg')
-        game['platform'] = ""
-        game['genre'] = []
-        with open(info_path, 'r') as f:
-            data = json.load(f)
-            for platform in data['platforms']:
-                game['platform'] += '{0},'.format(platform['name'])
-            for genre in data['genres']:
-                game['genre'].append(genre['name'])
+        try:
+            with open(info_path, 'r') as f:
+                data = json.load(f)
+                for platform in data['platforms']:
+                    game['platform'] += '{0},'.format(platform['name'])
+                for genre in data['genres']:
+                    game['genres'].append(genre['name'].encode('utf-8'))
+        except Exception as err:
+            xbmc.log('{0}: gamedata file for {1} not found'.format(addon_name, game['slug']), level=xbmc.LOGWARNING)
+
+        # Create a list item with a text label and a thumbnail image.
+        li = xbmcgui.ListItem(label=game['name'], iconImage=game['icon'], thumbnailImage=game['icon'])
         # Set graphics (thumbnail, fanart, banner, poster, landscape etc.) for the list item.
         li.setArt({'thumb': game['icon'], 'icon': game['icon'], 'banner': game['banner']})
         # Set info (title, platform, genres, publisher, developer, overview, year, gameclient) for the list item.
         # For available properties see the following link:
         # https://codedocs.xyz/xbmc/xbmc/group__python__xbmcgui__listitem.html#ga0b71166869bda87ad744942888fb5f14
-        li.setInfo('game', {'title': game['name'],
-                            'platform': game['platform'],
-                            'genres': game['genres'],
-                            'gameclient': game['runner']})
+        li.setInfo(type='Game', infoLabels={'title': game['name'],
+                                            'platform': game['platform'],
+                                            'genres': game['genres'],
+                                            'gameclient': game['runner']})
+        xbmc.log('Title: {0}, '
+                 'Platform: {1}, '
+                 'Genres: {2}, '
+                 'Gameclient: {3}'.format(xbmc.getInfoLabel('Game.Title'),
+                                          xbmc.getInfoLabel('Game.Platform'),
+                                          xbmc.getInfoLabel('Game.Genres'),
+                                          xbmc.getInfoLabel('Game.GameClient')), xbmc.LOGWARNING)
         # Set 'IsPlayable' property to 'true'. This is mandatory for playable items!
         li.setProperty('IsPlayable', 'true')
         # Create list to hold context meny items
@@ -157,12 +171,13 @@ def router(paramstring):
     # {<parameter>: <value>} elements
     params = dict(urlparse.parse_qsl(paramstring))
     # Check the parameters passed to the plugin
-    if params['action'] == 'play':
-        # Play a game from a provided URL.
-        # Notify user that game is launching
-        xbmcgui.Dialog().notification(addon_name, localized_string(30002).format(params['name']),
-                                      xbmcgui.NOTIFICATION_INFO)
-        Lutris.playGame(params['id'])
+    if 'action' in params.keys():
+        if params['action'] == 'play':
+            # Play a game from a provided URL.
+            # Notify user that game is launching
+            xbmcgui.Dialog().notification(addon_name, localized_string(30002).format(params['name']),
+                                          xbmcgui.NOTIFICATION_INFO)
+            Lutris.playGame(params['id'])
     else:
         list_games()
 

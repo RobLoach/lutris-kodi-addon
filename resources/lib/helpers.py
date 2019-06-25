@@ -17,5 +17,5 @@ def convert_to_utf8(li):
             # Iterate over the keys in the dict
             for key, value in item.items():
                 # Convert value to UTF8 and store to original key
-                item[key] = value.encode('utf-8')
+                item[key] = str(value).encode('utf-8')
     return li

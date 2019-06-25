@@ -6,19 +6,6 @@ import simplejson
 import xbmc
 
 
-# Usage:
-#   lutris [OPTION…] URI
-#
-# Run a game directly by adding the parameter lutris:rungame/game-identifier.
-# If several games share the same identifier you can use the numerical ID (displayed when running lutris --list-games) and add lutris:rungameid/numerical-id.
-# To install a game, add lutris:install/game-identifier.
-#
-# Help Options:
-#   -h, --help                 Show help options
-#   --help-all                 Show all help options
-#   --help-gapplication        Show GApplication options
-#   --help-gtk                 Show GTK+ Options
-#
 # Application Options:
 #   -v, --version              Print the version of Lutris and exit
 #   -d, --debug                Show debug messages
