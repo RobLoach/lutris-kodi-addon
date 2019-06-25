@@ -19,5 +19,17 @@
             type="bool"
             label="30102"
             default="false" />
+        <!-- Lutris Username-->
+        <setting id="username"
+                 type="text"
+                 label="30104"
+                 default=""/>
+        <!-- Lutris Password-->
+        <setting id="password"
+                 type="text"
+                 option="hidden"
+                 enable="!eq(-1,)"
+                 label="30105"
+                 default=""/>
     </category>
 </settings>

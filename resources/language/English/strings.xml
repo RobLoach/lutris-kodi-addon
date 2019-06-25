@@ -10,6 +10,8 @@
     <string id="30101">Path to Lutris Executable</string>
     <string id="30102">Display Only Installed Games</string>
     <string id="30103">Enable Custom Path</string>
+    <string id="30104">Lutris.net Username</string>
+    <string id="30105">Lutris.net Password</string>
 
     <!-- Contextual Menu -->
     <string id="30200">Switch Runner ({})</string>

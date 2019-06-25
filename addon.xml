@@ -6,6 +6,8 @@
     provider-name="Rob Loach">
     <requires>
         <import addon="xbmc.python" version="2.19.0" />
+        <import addon="script.module.requests" version="1.0"/>
+        <import addon="script.module.simplejson" version="3.16.1"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="default.py">
         <provides>game executable</provides>
