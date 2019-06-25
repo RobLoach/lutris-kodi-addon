@@ -174,7 +174,7 @@ def list_games():
     xbmcplugin.setPluginCategory(addon_handle, 'My Lutris Collection')
     # Set plugin content. It allows Kodi to select appropriate views
     # for this type of content.
-    xbmcplugin.setContent(addon_handle, 'files')
+    xbmcplugin.setContent(addon_handle, 'games')
     # Create a list to hold the games
     list_items = []
     # Add the Launch Lutris item
@@ -206,12 +206,12 @@ def list_games():
         # Set 'IsPlayable' property to 'true'. This is mandatory for playable items!
         li.setProperty('IsPlayable', 'true')
         # Create list to hold context meny items
-        contextmenu = []
+        context_menu = []
         # Append a info item to the context menu list
-        contextmenu.append(('Information', 'xbmc.Action(Info)'))
+        context_menu.append(('Information', 'xbmc.Action(Info)'))
         # Set the context menu from the items in the context menu list.
         # Replace the original items in the context menu.
-        li.addContextMenuItems(contextmenu)
+        li.addContextMenuItems(context_menu)
         # Create a URL for a plugin recursive call.
         # Example: plugin://plugin.script.lutris/?action=play&id=74&name=A%20Story%20About%20My%20Uncle
         url = get_url(action='play', id=game['id'], name=game['name'])
