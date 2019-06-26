@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <strings>
     <!-- General -->
-    <string id="30000">Launch Lutris</string>
-    <string id="30001">Run Lutris to allow browsing games and managing available runners</string>
-    <string id="30002">Launching {}</string>
+    <string id="30000">My Lutris Collection</string>
 
     <!-- Settings -->
     <string id="30100">General</string>
@@ -12,13 +10,14 @@
     <string id="30103">Enable Custom Path</string>
 
     <!-- Contextual Menu -->
-    <string id="30200">Switch Runner ({})</string>
+    <string id="30200">Reinstall</string>
+    <string id="30201">Install</string>
+    <string id="30202">Information</string>
+    <string id="30203">Settings</string>
+
 
     <!-- Dialog Boxes -->
-    <string id="30300">Lutris Not Found</string>
-    <string id="30301">1. Install Lutris from http://lutris.com</string>
-    <string id="30302">2. If Lutris is installed and the problem persists set a custom path to the executable in the add-on settings</string>
-    <string id="30303">1. Make sure the Lutris executable path is correct</string>
-    <string id="30304">Lutris Result Malformed</string>
-    <string id="30305">2. Attempt configuring and launching the add-on again</string>
+    <string id="30300">Launching {0}</string>
+    <string id="30301">Installing {0}</string>
+    <string id="30302">Reinstalling {0}</string>
 </strings>
