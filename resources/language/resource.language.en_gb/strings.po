@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://github.com/RobLoach/lutris-kodi-addon/issues\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: arustler\n"
+"Last-Translator: solbero\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,16 +19,8 @@ msgstr ""
 # General
 
 msgctxt "#30000"
-msgid "Launch Lutris"
-msgstr "Launch Lutris"
-
-msgctxt "#30001"
-msgid "Run Lutris to allow browsing games and managing available runners"
-msgstr "Run Lutris to allow browsing games and managing available runners"
-
-msgctxt "#30002"
-msgid "Launching {}"
-msgstr "Launching {}"
+msgid "My Lutris Collection"
+msgstr "My Lutris Collection"
 
 # Settings
 
@@ -51,31 +43,31 @@ msgstr "Enable Custom Path"
 # Contextual Menu
 
 msgctxt "#30200"
-msgid "Switch Runner ({})"
-msgstr "Switch Runner ({})"
+msgid "Reinstall"
+msgstr "Reinstall"
+
+msgctxt "#30201"
+msgid "Install"
+msgstr "Install"
+
+msgctxt "#30202"
+msgid "Information"
+msgstr "Information"
+
+msgctxt "#30203"
+msgid "Settings"
+msgstr "Settings"
 
 # Dialog Boxes
 
 msgctxt "#30300"
-msgid "Lutris Not Found"
-msgstr "Lutris Not Found"
+msgid "Launching {0}"
+msgstr "Launching {0}"
 
 msgctxt "#30301"
-msgid "1. Install Lutris from http://lutris.com"
-msgstr "1. Install Lutris from http://lutris.com"
+msgid "Installing {0}"
+msgstr "Installing {0}"
 
 msgctxt "#30302"
-msgid "2. If Lutris is installed and the problem persists set a custom path to the executable in the add-on settings"
-msgstr "2. If Lutris is installed and the problem persists set a custom path to the executable in the add-on settings"
-
-msgctxt "#30303"
-msgid "1. Make sure the Lutris executable path is correct"
-msgstr "1. Make sure the Lutris executable path is correct"
-
-msgctxt "#30304"
-msgid "Lutris Result Malformed"
-msgstr "Lutris Result Malformed"
-
-msgctxt "#30305"
-msgid "2. Attempt configuring and launching the add-on again"
-msgstr "2. Attempt configuring and launching the add-on again"
+msgid "Reinstalling {0}"
+msgstr "Reinstalling {0}"
