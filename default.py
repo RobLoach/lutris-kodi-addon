@@ -48,7 +48,7 @@ def log(msg, level=xbmc.LOGDEBUG):
     if isinstance(msg, str):
         msg = msg.decode('utf-8')
     # Write message to kodi.log
-    log_message = u'{0}: {1}'.format(addon_name, msg)
+    log_message = '{0}: {1}'.format(addon_name, msg)
     xbmc.log(log_message.encode('utf-8'), level)
 
 
@@ -234,7 +234,7 @@ def game(action, id_, slug):
         # Construct play command
         cmd = lutris(' lutris:rungameid/' + id_)
     # Check if action is install
-    elif action == 'install' or action == 'install':
+    elif action == 'install' or action == 'reinstall':
         # Construct install and reinstall command
         cmd = lutris(' lutris:' + slug + ' --reinstall')
     else:
@@ -245,7 +245,7 @@ def game(action, id_, slug):
     if xbmc.Player().isPlaying():
         xbmc.Player().stop()
     # Log action and command to kodi.log
-    log('{0} command is: {1}'.format(action, cmd))
+    log('Launch command is {0}'.format(cmd))
     # Disable the idle shutdown timer
     inhibit_shutdown(True)
     # Launch lutris with command
