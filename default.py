@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Module: default
-# Author: ???
-# Created on: ???
+# Author: Rob Loach
+# Created on: 28.12.2015
 # License: GPL v.2 https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
 from __future__ import unicode_literals
@@ -264,9 +264,6 @@ def router(paramstring):
     # Parse a URL-encoded paramstring to the dictionary of
     # {<parameter>: <value>} elements
     params = dict(urlparse.parse_qsl(paramstring))
-    # Check the parameters passed to the plugin
-    print paramstring
-    print params
     if params:
         if 'action' in params:
             if params['action'] == 'play':
