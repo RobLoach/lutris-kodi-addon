@@ -40,6 +40,10 @@ msgctxt "#30103"
 msgid "Enable Custom Path"
 msgstr "Enable Custom Path"
 
+msgctxt "#30104"
+msgid "Open Lutris Application"
+msgstr "Open Lutris Application"
+
 # Contextual Menu
 
 msgctxt "#30200"

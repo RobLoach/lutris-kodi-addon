@@ -14,7 +14,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 import xbmcplugin
-from subprocess import check_output
+from subprocess import check_output, call
 from distutils.spawn import find_executable
 
 # Get the plugin url in plugin:// notation
@@ -91,26 +91,11 @@ def inhibit_shutdown(bool):
     xbmc.executebuiltin('InhibitIdleShutdown({0})'.format(str_bool))
 
 
-def lutris(args=None):
+def lutris():
     """
-    Get the path to the lutris executable and append optional command line arguments.
+    Get the path to the Lutris executable
 
-    note:: Possible arguments for the lutris executable are:
-    -v, --version              Print the version of Lutris and exit
-    -d, --debug                Show debug messages
-    -i, --install              Install a game from a yml file
-    -e, --exec                 Execute a program with the lutris runtime
-    -l, --list-games           List all games in database
-    -o, --installed            Only list installed games
-    -s, --list-steam-games     List available Steam games
-    --list-steam-folders       List all known Steam library folders
-    -j, --json                 Display the list of games in JSON format
-    --reinstall                Reinstall game
-    --display=DISPLAY          X display to use
-
-    :param args: arguments to append to the lutris executable path
-    :type args: string
-    :return: path to the lutris executable with optional arguments
+    :return: path to the Lutris executable
     :rtype: string
     """
     # Check if the user has specified a custom path in addon settings
@@ -120,16 +105,9 @@ def lutris(args=None):
     else:
         # Find the path to the lutris executable
         path = find_executable("lutris").decode('utf-8')
-    # Check if arguments are passed to the function
-    if args is not None:
-        # Append command arguments to executable path
-        cmd = path + args
-    else:
-        # Set command to executable path
-        cmd = path
     # Log executable path to kodi.log
     log('Executable path is {}'.format(path))
-    return cmd
+    return path
 
 
 def get_games():
@@ -153,14 +131,15 @@ def get_games():
     :return: list of installed games
     :rtype: list
     """
+    # Get path to lutris executable
+    cmd = lutris()
     # Arguments to fetch games as a JSON object
     args = ' --list-games --json'
     # Check add on settings if only installed games should be fetched
     if addon.getSetting('installed') == 'true':
         args = args + ' --installed'
     # Get the list of games from Lutris as JSON
-    cmd = lutris(args)
-    result = check_output(cmd, shell=True)
+    result = check_output(cmd + args, shell=True)
     # Parse the list of games from JSON to a Python array
     response = json.loads(result)
     # Log Python array to kodi.log
@@ -230,25 +209,23 @@ def list_games():
     xbmcplugin.endOfDirectory(addon_handle)
 
 
-def launch(action, id_, slug):
+def game(action, id_, slug):
     """
     Play, install or reinstall a game.
 
     :param id: lutris game id
     :type path: string
     """
+    # Get path to lutris executable
+    cmd = lutris()
     # Check if action is playable
     if action == 'play':
         # Construct play command
-        cmd = lutris(' lutris:rungameid/' + id_)
+        args = 'lutris:rungameid/' + id_
     # Check if action is install
     elif action == 'install' or action == 'reinstall':
         # Construct install and reinstall command
-        cmd = lutris(' lutris:' + slug + ' --reinstall')
-    # Check if action is to open Lutris application
-    elif action == 'lutris':
-        # Construct open application command
-        cmd = lutris()
+        args = ' lutris:' + slug + ' --reinstall'
     else:
         # If the provided action does not contain a supported action
         # we raise an exception
@@ -260,8 +237,8 @@ def launch(action, id_, slug):
     log('Launch command is {0}'.format(cmd))
     # Disable the idle shutdown timer
     inhibit_shutdown(True)
-    # Launch lutris with command
-    os.system(cmd.encode('utf-8'))
+    # Launch lutris with arguments
+    call([cmd.encode('utf-8'), args])
     # Enable the idle shutdown timer
     inhibit_shutdown(False)
 
@@ -278,14 +255,14 @@ def router(paramstring):
     params = dict(urlparse.parse_qsl(paramstring))
     if params:
         if 'action' in params:
-            if params['action'] == 'play' or params['action'] == 'lutris':
+            if params['action'] == 'play':
                 notify(language(30300).format(params['name']))
             elif params['action'] == 'install':
                 notify(language(30301).format(params['name']))
             elif params['action'] == 'reinstall':
                 notify(language(30302).format(params['name']))
-            # Do an action (play, install, reinstall, lutris) on the selected item
-            launch(params['action'], params['id'], params['slug'])
+            # Do an action (play, install, reinstall) on the selected item
+            game(params['action'], params['id'], params['slug'])
         else:
             # If the provided paramstring does not contain a supported action
             # we raise an exception. This helps to catch coding errors,

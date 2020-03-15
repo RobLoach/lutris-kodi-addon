@@ -24,8 +24,8 @@
         <!-- Open Lutris Application -->
         <setting id="lutris"
             type="action"
-            label="30102"
+            label="30104"
             option="close"
-            action="RunScript(script.lutris, action=lutris, id=None, slug=None, name=Lutris)"/>
+            action="RunScript(special://home/addons/script.lutris/lutris.py)" />
     </category>
 </settings>
