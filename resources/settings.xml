@@ -13,11 +13,18 @@
             label="30101"
             value="/usr/bin/lutris"
             default="/usr/bin/lutris"
-            enable="eq(-1,true)" />
+            enable="eq(-1,true)"
+            subsetting="true" />
         <!-- Lutris Executable -->
         <setting id="installed"
             type="bool"
             label="30102"
             default="false" />
+        <setting type="sep"/>
+        <setting id="open_lutris"
+            type="action"
+            label="Open Lutris Application"
+            option="close"
+            action="RunScript(script.lutris, action=lutris&name=Lutris)"/>
     </category>
 </settings>

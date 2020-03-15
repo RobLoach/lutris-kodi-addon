@@ -62,13 +62,14 @@ def notify(msg):
     # Decode message to UTF8
     if isinstance(msg, str):
         msg = msg.decode('utf-8')
-    # Display message in kodi UI
+    # Display message in Kodi UI
     xbmcgui.Dialog().notification(addon_name, msg.encode('utf-8'))
 
 
 def get_url(**kwargs):
     """
-    Create a URL for calling the plugin recursively from the given set of keyword arguments.
+    Create a URL for calling the plugin recursively from the given set of
+    keyword arguments.
 
     :param kwargs: "argument: value" pairs
     :type kwargs: dict
@@ -85,15 +86,16 @@ def inhibit_shutdown(bool):
     :param bool: true or false boolean
     :type bool: bool
     """
-    # Convert bool to lowercase string
+    # Convert bool argument to lowercase string
     str_bool = str(bool).lower
-    # Send bool to kodi
+    # Send bool value to Kodi
     xbmc.executebuiltin('InhibitIdleShutdown({0})'.format(str_bool))
 
 
 def lutris(args=None):
     """
-    Get the path to the lutris executable and append optional command line arguments.
+    Get the path to the lutris executable and append optional
+    command line arguments.
 
     note:: Possible arguments for the lutris executable are:
     -v, --version              Print the version of Lutris and exit
@@ -113,23 +115,29 @@ def lutris(args=None):
     :return: path to the lutris executable with optional arguments
     :rtype: string
     """
-    # Check if the user has specified a custom path
+    # Check if the user has specified a custom path in addon settings
     if addon.getSetting('use_custom_path') == 'true':
         # Get the custom path from addon settings
         path = addon.getSetting('lutris_executable').decode('utf-8')
     else:
         # Find the path to the lutris executable
         path = find_executable("lutris").decode('utf-8')
+    # Check if arguments are passed to the function
     if args is not None:
         # Append command arguments to executable path
         cmd = path + args
-    log('Command path is {}'.format(cmd))
+    else:
+        # Set command to executable path
+        cmd = path
+    # Log executable path to kodi.log
+    log('Executable path is {}'.format(path))
     return cmd
 
 
 def get_games():
     """
-    Fetch a list of managed games from lutris as a JSON object and convert it to a Python array.
+    Fetch a list of managed games from lutris as a JSON object and convert
+    it to a Python array.
 
     note::  JSON object returned from Lutris looks as follows:
     [
@@ -150,7 +158,7 @@ def get_games():
     """
     # Arguments to fetch games as a JSON object
     args = ' --list-games --json'
-    # Check if only installed games should be fetched
+    # Check add on settings if only installed games should be fetched
     if addon.getSetting('installed') == 'true':
         args = args + ' --installed'
     # Get the list of games from Lutris as JSON
@@ -158,8 +166,8 @@ def get_games():
     result = check_output(cmd, shell=True)
     # Parse the list of games from JSON to a Python array.
     response = json.loads(result)
-    # Log Python array ro kodi.log
-    log('JSON output is: {0}'.format(response))
+    # Log Python array to kodi.log
+    log('JSON output is {0}'.format(response))
     return response
 
 
@@ -183,16 +191,18 @@ def list_games():
             game['name'] = '{0} (not installed)'.format(game['name'])
         # Create a list item with a label.
         li = xbmcgui.ListItem(label=game['name'])
-        # Set info (title, platform, genres, publisher, developer, overview, year, gameclient) for the list item.
         # Set 'IsPlayable' property to 'true'. This is mandatory for playable items!
         li.setProperty('IsPlayable', 'true')
+        # Set info (title, platform, genres, publisher, developer, overview,
+        # year, gameclient) for the list item.
         li.setInfo('game', {'title': game['name'], 'gameclient': game['runner']})
-        # Expand the path to the users home folder
+        # Expand the path to the user's home folder
         home = os.path.expanduser('~').decode('utf-8')
         # Get the local game artwork
         game['icon'] = os.path.join(home, '.local', 'share', 'icons', 'hicolor', '128x128', 'apps', 'lutris_' + game['slug'] + '.png')
         game['banner'] = os.path.join(home, '.local', 'share', 'lutris', 'banners', game['slug'] + '.jpg')
-        # Set graphics (thumbnail, fanart, banner, poster, landscape etc.) for the list item.
+        # Set graphics (thumbnail, fanart, banner, poster, landscape etc.) for
+        # the list item.
         li.setArt({'thumb': game['icon'], 'icon': game['icon'], 'banner': game['banner']})
         # Create list to hold context menu items
         context_menu = []
@@ -214,15 +224,17 @@ def list_games():
         is_folder = False
         # Add the item to item list
         list_items.append((url, li, is_folder))
-    # Add the list containing all game items to the Kodi virtual folder listing.
+    # Add the list containing all game items to the Kodi virtual
+    # folder listing.
     xbmcplugin.addDirectoryItems(addon_handle, list_items)
-    # Add a sort method for the virtual folder items (alphabetically, ignore articles).
+    # Add a sort method for the virtual folder items
+    # (alphabetically, ignore articles).
     xbmcplugin.addSortMethod(addon_handle, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
     # Finish creating a virtual folder.
     xbmcplugin.endOfDirectory(addon_handle)
 
 
-def game(action, id_, slug):
+def launch(action, id_=None, slug=None):
     """
     Play, install or reinstall a game.
 
@@ -237,6 +249,9 @@ def game(action, id_, slug):
     elif action == 'install' or action == 'reinstall':
         # Construct install and reinstall command
         cmd = lutris(' lutris:' + slug + ' --reinstall')
+    elif action == 'lutris':
+        # Construct open application command
+        cmd = lutris()
     else:
         # If the provided action does not contain a supported action
         # we raise an exception.
@@ -244,12 +259,18 @@ def game(action, id_, slug):
     # Stop playback if Kodi is playing any media
     if xbmc.Player().isPlaying():
         xbmc.Player().stop()
-    # Log action and command to kodi.log
+    # Log launch command to kodi.log
     log('Launch command is {0}'.format(cmd))
     # Disable the idle shutdown timer
     inhibit_shutdown(True)
     # Launch lutris with command
-    os.system(cmd.encode('utf-8'))
+    try:
+        os.system(cmd.encode('utf-8'))
+    except:
+        # Notify the user that executable was not found
+        notify(language('Lutris not found'))
+        # Log error to kodi.log
+        log('Executable not found. Make sure the path to the executable is correct in the addon settings.', level=xbmc.LOGERROR)
     # Enable the idle shutdown timer
     inhibit_shutdown(False)
 
@@ -266,14 +287,14 @@ def router(paramstring):
     params = dict(urlparse.parse_qsl(paramstring))
     if params:
         if 'action' in params:
-            if params['action'] == 'play':
+            if params['action'] == 'play' or params['action'] == 'lutris':
                 notify(language(30300).format(params['name']))
             elif params['action'] == 'install':
                 notify(language(30301).format(params['name']))
             elif params['action'] == 'reinstall':
                 notify(language(30302).format(params['name']))
             # Do an action (play, install, reinstall) on the selected game
-            game(params['action'], params['id'], params['slug'])
+            launch(params['action'], params['id'], params['slug'])
         else:
             # If the provided paramstring does not contain a supported action
             # we raise an exception. This helps to catch coding errors,
