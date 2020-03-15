@@ -131,15 +131,14 @@ def get_games():
     :return: list of installed games
     :rtype: list
     """
-    # Get path to lutris executable
-    cmd = lutris()
+    cmd = lutris().encode('utf-8')
     # Arguments to fetch games as a JSON object
     args = ' --list-games --json'
     # Check add on settings if only installed games should be fetched
     if addon.getSetting('installed') == 'true':
         args = args + ' --installed'
     # Get the list of games from Lutris as JSON
-    result = check_output(cmd + args, shell=True)
+    result = check_output([cmd, args], shell=True)
     # Parse the list of games from JSON to a Python array
     response = json.loads(result)
     # Log Python array to kodi.log
@@ -216,8 +215,7 @@ def game(action, id_, slug):
     :param id: lutris game id
     :type path: string
     """
-    # Get path to lutris executable
-    cmd = lutris()
+    cmd = lutris().encode('utf-8')
     # Check if action is playable
     if action == 'play':
         # Construct play command
@@ -238,7 +236,7 @@ def game(action, id_, slug):
     # Disable the idle shutdown timer
     inhibit_shutdown(True)
     # Launch lutris with arguments
-    call([cmd.encode('utf-8'), args])
+    call([cmd, args])
     # Enable the idle shutdown timer
     inhibit_shutdown(False)
 

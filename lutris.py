@@ -11,7 +11,7 @@ from subprocess import call
 from distutils.spawn import find_executable
 
 # Get the addon id
-addon = xbmcaddon.Addon()
+addon = xbmcaddon.Addon(id='script.lutris')
 # Get the addon name
 addon_name = addon.getAddonInfo('name')
 
@@ -58,5 +58,5 @@ def lutris():
     return path
 
 if __name__ == '__main__':
-    cmd = lutris()
-    call([cmd.encode('utf-8')])
+    cmd = lutris().encode('utf-8')
+    call([cmd])
