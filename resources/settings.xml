@@ -26,6 +26,6 @@
             type="action"
             label="30102"
             option="close"
-            action="RunScript(script.lutris, action=lutris&id=None&slug=None&name=Lutris)"/>
+            action="RunScript(script.lutris, action=lutris, id=None, slug=None, name=Lutris)"/>
     </category>
 </settings>

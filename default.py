@@ -261,13 +261,7 @@ def launch(action, id_, slug):
     # Disable the idle shutdown timer
     inhibit_shutdown(True)
     # Launch lutris with command
-    try:
-        os.system(cmd.encode('utf-8'))
-    except:
-        # Notify the user that executable was not found
-        notify(language('Lutris not found'))
-        # Log error to kodi.log
-        log('Executable not found. Make sure the path to the executable is correct in the addon settings.', level=xbmc.LOGERROR)
+    os.system(cmd.encode('utf-8'))
     # Enable the idle shutdown timer
     inhibit_shutdown(False)
 
