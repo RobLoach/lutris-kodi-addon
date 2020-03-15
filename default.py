@@ -68,8 +68,7 @@ def notify(msg):
 
 def get_url(**kwargs):
     """
-    Create a URL for calling the plugin recursively from the given set of
-    keyword arguments.
+    Create a URL for calling the plugin recursively from the given set of keyword arguments.
 
     :param kwargs: "argument: value" pairs
     :type kwargs: dict
@@ -94,8 +93,7 @@ def inhibit_shutdown(bool):
 
 def lutris(args=None):
     """
-    Get the path to the lutris executable and append optional
-    command line arguments.
+    Get the path to the lutris executable and append optional command line arguments.
 
     note:: Possible arguments for the lutris executable are:
     -v, --version              Print the version of Lutris and exit
@@ -116,9 +114,9 @@ def lutris(args=None):
     :rtype: string
     """
     # Check if the user has specified a custom path in addon settings
-    if addon.getSetting('use_custom_path') == 'true':
+    if addon.getSetting('custom_path') == 'true':
         # Get the custom path from addon settings
-        path = addon.getSetting('lutris_executable').decode('utf-8')
+        path = addon.getSetting('executable').decode('utf-8')
     else:
         # Find the path to the lutris executable
         path = find_executable("lutris").decode('utf-8')
@@ -136,8 +134,7 @@ def lutris(args=None):
 
 def get_games():
     """
-    Fetch a list of managed games from lutris as a JSON object and convert
-    it to a Python array.
+    Fetch a list of managed games from lutris as a JSON object and convert it to a Python array.
 
     note::  JSON object returned from Lutris looks as follows:
     [
@@ -233,7 +230,7 @@ def list_games():
     xbmcplugin.endOfDirectory(addon_handle)
 
 
-def launch(action, id, slug):
+def launch(action, id_, slug):
     """
     Play, install or reinstall a game.
 
