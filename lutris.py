@@ -57,6 +57,5 @@ def lutris():
     log('Executable path is {}'.format(path))
     return path
 
-if __name__ == '__main__':
-    cmd = lutris().encode('utf-8')
-    call([cmd])
+cmd = lutris().encode('utf-8')
+call([cmd])
