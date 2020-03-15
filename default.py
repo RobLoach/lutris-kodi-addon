@@ -17,9 +17,9 @@ import xbmcplugin
 from subprocess import check_output
 from distutils.spawn import find_executable
 
-# Get the plugin url in plugin:// notation.
+# Get the plugin url in plugin:// notation
 base_url = sys.argv[0]
-# Get the plugin handle as an integer number.
+# Get the plugin handle as an integer number
 addon_handle = int(sys.argv[1])
 # Get the addon id
 addon = xbmcaddon.Addon()
@@ -164,7 +164,7 @@ def get_games():
     # Get the list of games from Lutris as JSON
     cmd = lutris(args)
     result = check_output(cmd, shell=True)
-    # Parse the list of games from JSON to a Python array.
+    # Parse the list of games from JSON to a Python array
     response = json.loads(result)
     # Log Python array to kodi.log
     log('JSON output is {0}'.format(response))
@@ -174,14 +174,14 @@ def get_games():
 def list_games():
     """Create a list of games in the Kodi interface."""
     # Set plugin category. It is displayed in some skins as the name
-    # of the current section.
+    # of the current section
     xbmcplugin.setPluginCategory(addon_handle, language(30000))
     # Set plugin content. It allows Kodi to select appropriate views
-    # for this type of content.
+    # for this type of content
     xbmcplugin.setContent(addon_handle, 'games')
     # Create list to hold list items
     list_items = []
-    # Get list of games from lutris
+    # Get list of games from Lutris
     games = get_games()
     # Iterate through the list of games
     for game in games:
@@ -194,7 +194,7 @@ def list_games():
         # Set 'IsPlayable' property to 'true'. This is mandatory for playable items!
         li.setProperty('IsPlayable', 'true')
         # Set info (title, platform, genres, publisher, developer, overview,
-        # year, gameclient) for the list item.
+        # year, gameclient) for the list item
         li.setInfo('game', {'title': game['name'], 'gameclient': game['runner']})
         # Expand the path to the user's home folder
         home = os.path.expanduser('~').decode('utf-8')
@@ -202,7 +202,7 @@ def list_games():
         game['icon'] = os.path.join(home, '.local', 'share', 'icons', 'hicolor', '128x128', 'apps', 'lutris_' + game['slug'] + '.png')
         game['banner'] = os.path.join(home, '.local', 'share', 'lutris', 'banners', game['slug'] + '.jpg')
         # Set graphics (thumbnail, fanart, banner, poster, landscape etc.) for
-        # the list item.
+        # the list item
         li.setArt({'thumb': game['icon'], 'icon': game['icon'], 'banner': game['banner']})
         # Create list to hold context menu items
         context_menu = []
@@ -228,13 +228,12 @@ def list_games():
     # folder listing.
     xbmcplugin.addDirectoryItems(addon_handle, list_items)
     # Add a sort method for the virtual folder items
-    # (alphabetically, ignore articles).
     xbmcplugin.addSortMethod(addon_handle, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
     # Finish creating a virtual folder.
     xbmcplugin.endOfDirectory(addon_handle)
 
 
-def launch(action, id_=None, slug=None):
+def launch(action, id, slug):
     """
     Play, install or reinstall a game.
 
@@ -249,12 +248,13 @@ def launch(action, id_=None, slug=None):
     elif action == 'install' or action == 'reinstall':
         # Construct install and reinstall command
         cmd = lutris(' lutris:' + slug + ' --reinstall')
+    # Check if action is to open Lutris application
     elif action == 'lutris':
         # Construct open application command
         cmd = lutris()
     else:
         # If the provided action does not contain a supported action
-        # we raise an exception.
+        # we raise an exception
         raise ValueError('Invalid action: {0}'.format(action))
     # Stop playback if Kodi is playing any media
     if xbmc.Player().isPlaying():
@@ -293,15 +293,15 @@ def router(paramstring):
                 notify(language(30301).format(params['name']))
             elif params['action'] == 'reinstall':
                 notify(language(30302).format(params['name']))
-            # Do an action (play, install, reinstall) on the selected game
+            # Do an action (play, install, reinstall, lutris) on the selected item
             launch(params['action'], params['id'], params['slug'])
         else:
             # If the provided paramstring does not contain a supported action
             # we raise an exception. This helps to catch coding errors,
-            # e.g. typos in action names.
+            # e.g. typos in action names
             raise ValueError('Invalid paramstring: {0}'.format(paramstring))
     else:
-        # Display the list of games from lutris
+        # Display the list of games from Lutris
         list_games()
 
 if __name__ == '__main__':

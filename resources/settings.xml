@@ -25,6 +25,6 @@
             type="action"
             label="Open Lutris Application"
             option="close"
-            action="RunScript(script.lutris, action=lutris&name=Lutris)"/>
+            action="RunScript(script.lutris,action=lutris&id=None&slug=None&name=Lutris)"/>
     </category>
 </settings>
