@@ -20,12 +20,13 @@
             type="bool"
             label="30102"
             default="false" />
+        <!-- Seperator -->
         <setting type="sep"/>
         <!-- Open Lutris Application -->
-        <!-- <setting id="lutris"
+        <setting id="lutris"
             type="action"
             label="30104"
             option="close"
-            action="RunScript(special://home/addons/script.lutris/lutris.py)" /> -->
+            action="RunScript(special://home/addons/script.lutris/lutris.py)" />
     </category>
 </settings>

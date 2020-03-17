@@ -91,9 +91,9 @@ def inhibit_shutdown(bool):
     xbmc.executebuiltin('InhibitIdleShutdown({0})'.format(str_bool))
 
 
-def lutris():
+def get_path():
     """
-    Get the path to the Lutris executable
+    Get the path to the Lutris executable.
 
     :return: path to the Lutris executable
     :rtype: string
@@ -105,7 +105,7 @@ def lutris():
     else:
         # Find the path to the lutris executable
         path = find_executable("lutris").decode('utf-8')
-    # Log executable path to kodi.log
+    # Log lutris executable path to kodi.log
     log('Executable path is {}'.format(path))
     return path
 
@@ -131,17 +131,23 @@ def get_games():
     :return: list of installed games
     :rtype: list
     """
-    cmd = lutris().encode('utf-8')
-    # Arguments to fetch games as a JSON object
-    args = ' --list-games --json'
-    # Check add on settings if only installed games should be fetched
+    # Add the path to the lutris executable to the command list
+    cmd = get_path()
+    # Add arguments to the command list to fetch games from lutris as a JSON
+    # object
+    cmd = cmd + ' --list-games --json'
+    # Check add on settings to see if only installed games should be fetched
+    # from lutris
     if addon.getSetting('installed') == 'true':
-        args = args + ' --installed'
-    # Get the list of games from Lutris as JSON
-    result = check_output([cmd, args], shell=True)
-    # Parse the list of games from JSON to a Python array
+        # Add install argument to the command list
+        cmd = cmd + ' --installed'
+    # Convert command string to list
+    cmd = cmd.split()
+    # Get the list of games from lutris as a JSON object
+    result = check_output(cmd)
+    # Parse the list of games from the JSON object to a Python array
     response = json.loads(result)
-    # Log Python array to kodi.log
+    # Log the Python array to kodi.log
     log('JSON output is {0}'.format(response))
     return response
 
@@ -162,11 +168,12 @@ def list_games():
     for game in games:
         # Check if game is installed
         if game['runner'] is None:
-            # Append not installed to game name
+            # Append (not installed) to game name if not installed
             game['name'] = '{0} (not installed)'.format(game['name'])
-        # Create a list item with a label.
+        # Create a list item with the game name as a label
         li = xbmcgui.ListItem(label=game['name'])
-        # Set 'IsPlayable' property to 'true'. This is mandatory for playable items!
+        # Set 'IsPlayable' property to 'true'. This is mandatory for
+        # playable items!
         li.setProperty('IsPlayable', 'true')
         # Set info (title, platform, genres, publisher, developer, overview,
         # year, gameclient) for the list item
@@ -179,32 +186,32 @@ def list_games():
         # Set graphics (thumbnail, fanart, banner, poster, landscape etc.) for
         # the list item
         li.setArt({'thumb': game['icon'], 'icon': game['icon'], 'banner': game['banner']})
-        # Create list to hold context menu items
+        # Create a list to hold context menu items
         context_menu = []
         # Append infomation item to the context menu list
         context_menu.append((language(30202), 'Action(Info)'))
-        # Check if game is not installed
+        # Check if game is installed
         if game['runner'] is None:
-            # Append install item to the context menu list
+            # Append install item to the context menu list if not installed
             context_menu.append((language(30201), 'RunPlugin({0})'.format(get_url(action='install', id=game['id'], slug=game['slug'], name=game['name'].encode('utf8')))))
         else:
-            # Append reinstall item to the context menu list
+            # Append reinstall item to the context menu list if installed
             context_menu.append((language(30200), 'RunPlugin({0})'.format(get_url(action='reinstall', id=game['id'], slug=game['slug'], name=game['name'].encode('utf8')))))
         # Set context menu from tuples in context menu list
         li.addContextMenuItems(context_menu)
         # Create a URL for a plugin recursive call.
         # Example: plugin://plugin.script.lutris/?action=play&id=74&slug=a-story-about-my-uncle&name=A%20Story%20About%20My%20Uncle
         url = get_url(action='play', id=game['id'], slug=game['slug'], name=game['name'].encode('utf8'))
-        # is_folder = False means that this item won't open any sub-list.
+        # 'is_folder = False' means that this item won't open any sub-list.
         is_folder = False
-        # Add the item to item list
+        # Add the list item to the item list
         list_items.append((url, li, is_folder))
-    # Add the list containing all game items to the Kodi virtual
-    # folder listing.
+    # Add the list containing all list items to the Kodi virtual
+    # folder listing
     xbmcplugin.addDirectoryItems(addon_handle, list_items)
-    # Add a sort method for the virtual folder items
+    # Add a sort method for the virtual folder listing
     xbmcplugin.addSortMethod(addon_handle, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
-    # Finish creating a virtual folder.
+    # Finish creating a virtual folder
     xbmcplugin.endOfDirectory(addon_handle)
 
 
@@ -212,18 +219,23 @@ def game(action, id_, slug):
     """
     Play, install or reinstall a game.
 
-    :param id: lutris game id
+    :param action: lutris game action
+    :type path: string
+    :param id_: lutris game id
+    :type path: string
+    :param slug: lutris game slug
     :type path: string
     """
-    cmd = lutris().encode('utf-8')
-    # Check if action is playable
+    # Add the path to the lutris executable to the command list
+    cmd = get_path()
+    # Check if action is 'play'
     if action == 'play':
         # Construct play command
-        args = 'lutris:rungameid/' + id_
-    # Check if action is install
+        cmd = cmd + ' lutris:rungameid/' + id_
+    # Check if action is 'install' or 'reinstall'
     elif action == 'install' or action == 'reinstall':
         # Construct install and reinstall command
-        args = ' lutris:' + slug + ' --reinstall'
+        cmd = cmd + ' lutris:' + slug + ' --reinstall'
     else:
         # If the provided action does not contain a supported action
         # we raise an exception
@@ -231,13 +243,16 @@ def game(action, id_, slug):
     # Stop playback if Kodi is playing any media
     if xbmc.Player().isPlaying():
         xbmc.Player().stop()
-    # Log launch command to kodi.log
+    # Log command to kodi.log
     log('Launch command is {0}'.format(cmd))
     # Disable the idle shutdown timer
     inhibit_shutdown(True)
-    # Launch lutris with arguments
-    call([cmd, args])
-    # Enable the idle shutdown timer
+    # Convert command string to list
+    cmd = cmd.split()
+    # Launch lutris with command. Subprocess.call waits for the game
+    # to finish before continuing
+    call(cmd)
+    # Enable the idle shutdown timer after the user exits the game
     inhibit_shutdown(False)
 
 
@@ -253,13 +268,15 @@ def router(paramstring):
     params = dict(urlparse.parse_qsl(paramstring))
     if params:
         if 'action' in params:
+            # Notif the user of selected action in kodi
             if params['action'] == 'play':
                 notify(language(30300).format(params['name']))
             elif params['action'] == 'install':
                 notify(language(30301).format(params['name']))
             elif params['action'] == 'reinstall':
                 notify(language(30302).format(params['name']))
-            # Do an action (play, install, reinstall) on the selected item
+            # Do do the selected action (play, install, reinstall) on the
+            # selectedlist item
             game(params['action'], params['id'], params['slug'])
         else:
             # If the provided paramstring does not contain a supported action
@@ -272,5 +289,6 @@ def router(paramstring):
 
 if __name__ == '__main__':
     # Call the router function and pass the plugin call parameters to it.
-    # We use string slicing to trim the leading '?' from the plugin call paramstring
+    # We use string slicing to trim the leading '?' from the plugin call
+    # paramstring
     router(sys.argv[2][1:])
