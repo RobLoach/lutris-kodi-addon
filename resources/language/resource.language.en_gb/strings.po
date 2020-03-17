@@ -29,20 +29,20 @@ msgid "General"
 msgstr "General"
 
 msgctxt "#30101"
-msgid "Path to Lutris Executable"
-msgstr "Path to Lutris Executable"
+msgid "Path to Lutris executable"
+msgstr "Path to Lutris executable"
 
 msgctxt "#30102"
-msgid "Display Only Installed Games"
-msgstr "Display Only Installed Games"
+msgid "Display only installed games"
+msgstr "Display only installed games"
 
 msgctxt "#30103"
-msgid "Enable Custom Path"
-msgstr "Enable Custom Path"
+msgid "Enable custom path"
+msgstr "Enable custom path"
 
 msgctxt "#30104"
-msgid "Open Lutris Application"
-msgstr "Open Lutris Application"
+msgid "Open Lutris"
+msgstr "Open Lutris"
 
 # Contextual Menu
 
