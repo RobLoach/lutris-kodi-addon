@@ -215,7 +215,7 @@ def list_games():
     xbmcplugin.endOfDirectory(addon_handle)
 
 
-def game(action, id_, slug):
+def run(action, id_, slug):
     """
     Play, install or reinstall a game.
 
@@ -277,7 +277,7 @@ def router(paramstring):
                 notify(language(30302).format(params['name']))
             # Do do the selected action (play, install, reinstall) on the
             # selectedlist item
-            game(params['action'], params['id'], params['slug'])
+            run(params['action'], params['id'], params['slug'])
         else:
             # If the provided paramstring does not contain a supported action
             # we raise an exception. This helps to catch coding errors,
