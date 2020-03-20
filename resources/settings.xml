@@ -2,22 +2,31 @@
 <settings>
     <!-- General -->
     <category label="30100">
-        <!-- Lutris Executable -->
-        <setting id="use_custom_path"
+        <!-- Enable Custom Path -->
+        <setting id="custom_path"
           type="bool"
           label="30103"
           default="false" />
-        <!-- Lutris Executable -->
-        <setting id="lutris_executable"
+        <!-- Lutris Executable Path -->
+        <setting id="executable"
             type="file"
             label="30101"
             value="/usr/bin/lutris"
             default="/usr/bin/lutris"
-            enable="eq(-1,true)" />
-        <!-- Lutris Executable -->
+            enable="eq(-1,true)"
+            subsetting="true" />
+        <!-- Display Only Installed Games -->
         <setting id="installed"
             type="bool"
             label="30102"
             default="false" />
+        <!-- Seperator -->
+        <setting type="sep"/>
+        <!-- Open Lutris Application -->
+        <setting id="lutris"
+            type="action"
+            label="30104"
+            option="close"
+            action="RunScript(special://home/addons/script.lutris/lutris.py)" />
     </category>
 </settings>
