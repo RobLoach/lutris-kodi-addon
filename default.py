@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Module: default
-# Author: Rob Loach
+# Author: Rob Loach, solbero
 # Created on: 28.12.2015
 # License: GPL v.2 https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
