@@ -2,7 +2,7 @@
 
 [Kodi](http://kodi.tv) addon to launch games through [Lutris](http://lutris.net).
 
-![Lutris Kodi Addon Screenshot](resources/media/screenshot.jpg "Lutris Kodi Addon")
+![Lutris Kodi Addon Screenshot](resources/screenshot.jpg "Lutris Kodi Addon")
 
 ## Features
 
