@@ -144,7 +144,9 @@ def get_games():
     # Convert command string to list
     cmd = cmd.split()
     # Get the list of games from lutris as a JSON object
-    result = check_output(cmd)
+    raw_result = check_output(cmd)
+    # Remove extra warning messages lutris logs
+    result = raw_result[raw_result.index('['):raw_result.index(']')+1]
     # Parse the list of games from the JSON object to a Python array
     response = json.loads(result)
     # Log the Python array to kodi.log
