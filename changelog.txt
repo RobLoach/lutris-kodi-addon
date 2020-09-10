@@ -1,3 +1,7 @@
+[B]Version 1.4.1: September 10th, 2020[/B]
+- Fixed JSON parsing error, by @Turpster
+- Fix screenshot not showing, by @sharkwouter
+
 [B]Version 1.4.0: March 19th, 2020[/B]
 
 - Complete rewrite of addon code, by @solbero
