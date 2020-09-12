@@ -96,8 +96,10 @@ def get_path():
     Get the path to the Lutris executable.
 
     :return: path to the Lutris executable
-    :rtype: string
+    :rtype: list
     """
+    # Create an empty list to hold the path and command arguments
+    cmd = []
     # Check if the user has specified a custom path in addon settings
     if addon.getSetting('custom_path') == 'true':
         # Get the custom path from addon settings
@@ -105,9 +107,11 @@ def get_path():
     else:
         # Find the path to the lutris executable
         path = find_executable("lutris").decode('utf-8')
+    # Append the path to the command list
+    cmd.append(path)
     # Log lutris executable path to kodi.log
-    log('Executable path is {}'.format(path))
-    return path
+    log('Executable path is {}'.format(path))    
+    return cmd
 
 
 def get_games():
@@ -135,14 +139,12 @@ def get_games():
     cmd = get_path()
     # Add arguments to the command list to fetch games from lutris as a JSON
     # object
-    cmd = cmd + ' --list-games --json'
+    cmd.append('--list-games', '--json')
     # Check add on settings to see if only installed games should be fetched
     # from lutris
     if addon.getSetting('installed') == 'true':
         # Add install argument to the command list
-        cmd = cmd + ' --installed'
-    # Convert command string to list
-    cmd = cmd.split()
+        cmd.append('--installed')
     # Get the list of games from lutris as a JSON object
     raw_result = check_output(cmd)
     # Remove extra warning messages lutris logs
@@ -233,11 +235,11 @@ def run(action, id_, slug):
     # Check if action is 'play'
     if action == 'play':
         # Construct play command
-        cmd = cmd + ' lutris:rungameid/' + id_
+        cmd.append('lutris:rungameid/' + id_)
     # Check if action is 'install' or 'reinstall'
     elif action == 'install' or action == 'reinstall':
         # Construct install and reinstall command
-        cmd = cmd + ' lutris:' + slug + ' --reinstall'
+        cmd.append('lutris:' + slug, '--reinstall')
     else:
         # If the provided action does not contain a supported action
         # we raise an exception
@@ -245,12 +247,10 @@ def run(action, id_, slug):
     # Stop playback if Kodi is playing any media
     if xbmc.Player().isPlaying():
         xbmc.Player().stop()
-    # Log command to kodi.log
-    log('Launch command is {0}'.format(cmd))
+    # Log command and arguments to kodi.log
+    log('Launch command is {0}'.format(' '.join(cmd)))
     # Disable the idle shutdown timer
     inhibit_shutdown(True)
-    # Convert command string to list
-    cmd = cmd.split()
     # Launch lutris with command. Subprocess.call waits for the game
     # to finish before continuing
     call(cmd)
