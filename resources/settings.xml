@@ -19,7 +19,7 @@
         <setting id="installed"
             type="bool"
             label="30102"
-            default="false" />
+            default="true" />
         <!-- Seperator -->
         <setting type="sep"/>
         <!-- Open Lutris Application -->
