@@ -195,14 +195,14 @@ def list_games():
         # Create a list to hold context menu items
         context_menu = []
         # Append infomation item to the context menu list
-        context_menu.extend((language(30202), 'Action(Info)'))
+        context_menu.append((language(30202), 'Action(Info)'))
         # Check if game is installed
         if game['runner'] is None:
             # Append install item to the context menu list if not installed
-            context_menu.extend((language(30201), 'RunPlugin({0})'.format(get_url(action='install', id=game['id'], slug=game['slug'], name=game['name'].encode('utf8')))))
+            context_menu.append((language(30201), 'RunPlugin({0})'.format(get_url(action='install', id=game['id'], slug=game['slug'], name=game['name'].encode('utf8')))))
         else:
             # Append reinstall item to the context menu list if installed
-            context_menu.extend((language(30200), 'RunPlugin({0})'.format(get_url(action='reinstall', id=game['id'], slug=game['slug'], name=game['name'].encode('utf8')))))
+            context_menu.append((language(30200), 'RunPlugin({0})'.format(get_url(action='reinstall', id=game['id'], slug=game['slug'], name=game['name'].encode('utf8')))))
         # Set context menu from tuples in context menu list
         li.addContextMenuItems(context_menu)
         # Create a URL for a plugin recursive call.
@@ -211,7 +211,7 @@ def list_games():
         # 'is_folder = False' means that this item won't open any sub-list.
         is_folder = False
         # Add the list item to the item list
-        list_items.extend((url, li, is_folder))
+        list_items.append((url, li, is_folder))
     # Add the list containing all list items to the Kodi virtual
     # folder listing
     xbmcplugin.addDirectoryItems(addon_handle, list_items)
