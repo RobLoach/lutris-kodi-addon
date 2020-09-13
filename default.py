@@ -27,6 +27,8 @@ addon = xbmcaddon.Addon()
 addon_name = addon.getAddonInfo('name')
 # Get the localized strings
 language = addon.getLocalizedString
+# Expand the path to the user's home folder
+home = os.path.expanduser('~').decode('utf-8')
 
 
 def log(msg, level=xbmc.LOGDEBUG):
@@ -110,7 +112,8 @@ def get_path():
     # Append the path to the command list
     cmd.append(path)
     # Log lutris executable path to kodi.log
-    log('Executable path is {}'.format(path))    
+    log('Executable path is: {}'.format(path))
+    # Return lutris path
     return cmd
 
 
@@ -139,7 +142,7 @@ def get_games():
     cmd = get_path()
     # Add arguments to the command list to fetch games from lutris as a JSON
     # object
-    cmd.append('--list-games', '--json')
+    cmd.append(('--list-games', '--json'))
     # Check add on settings to see if only installed games should be fetched
     # from lutris
     if addon.getSetting('installed') == 'true':
@@ -147,12 +150,13 @@ def get_games():
         cmd.append('--installed')
     # Get the list of games from lutris as a JSON object
     raw_result = check_output(cmd)
-    # Remove extra warning messages lutris logs
+    # Remove warning messages from JSON output
     result = raw_result[raw_result.index('['):raw_result.index(']')+1]
-    # Parse the list of games from the JSON object to a Python array
+    # Parse the list of games from a JSON object to a Python array
     response = json.loads(result)
     # Log the Python array to kodi.log
-    log('JSON output is {0}'.format(response))
+    log('JSON output is: {0}'.format(response))
+    # Return game list
     return response
 
 
@@ -182,8 +186,6 @@ def list_games():
         # Set info (title, platform, genres, publisher, developer, overview,
         # year, gameclient) for the list item
         li.setInfo('game', {'title': game['name'], 'gameclient': game['runner']})
-        # Expand the path to the user's home folder
-        home = os.path.expanduser('~').decode('utf-8')
         # Get the local game artwork
         game['icon'] = os.path.join(home, '.local', 'share', 'icons', 'hicolor', '128x128', 'apps', 'lutris_' + game['slug'] + '.png')
         game['banner'] = os.path.join(home, '.local', 'share', 'lutris', 'banners', game['slug'] + '.jpg')
@@ -239,7 +241,7 @@ def run(action, id_, slug):
     # Check if action is 'install' or 'reinstall'
     elif action == 'install' or action == 'reinstall':
         # Construct install and reinstall command
-        cmd.append('lutris:' + slug, '--reinstall')
+        cmd.append(('lutris:' + slug, '--reinstall'))
     else:
         # If the provided action does not contain a supported action
         # we raise an exception
@@ -248,7 +250,7 @@ def run(action, id_, slug):
     if xbmc.Player().isPlaying():
         xbmc.Player().stop()
     # Log command and arguments to kodi.log
-    log('Launch command is {0}'.format(' '.join(cmd)))
+    log('Launch command is: {0}'.format(' '.join(cmd)))
     # Disable the idle shutdown timer
     inhibit_shutdown(True)
     # Launch lutris with command. Subprocess.call waits for the game
