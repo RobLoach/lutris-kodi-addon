@@ -19,7 +19,7 @@
 
 1. [Install solbero's Kodi add-on repository](https://github.com/solbero/repository.solbero/blob/master/README.md)
 
-1. Visit Home → Settings → Add-ons → Install from repository → solbero’s Kodi add-on repository → Game add-ons →Game providers → Lutris → Install
+1. Visit Home → Settings → Add-ons → Install from repository → solbero’s Kodi add-on repository → Game add-ons → Game providers → Lutris → Install
 
 ## Install manually
 
