@@ -27,6 +27,8 @@ addon = xbmcaddon.Addon()
 addon_name = addon.getAddonInfo('name')
 # Get the localized strings
 language = addon.getLocalizedString
+# Expand the path to the user's home folder
+home = os.path.expanduser('~').decode('utf-8')
 
 
 def log(msg, level=xbmc.LOGDEBUG):
@@ -96,8 +98,10 @@ def get_path():
     Get the path to the Lutris executable.
 
     :return: path to the Lutris executable
-    :rtype: string
+    :rtype: list
     """
+    # Create an empty list to hold the path and command arguments
+    cmd = []
     # Check if the user has specified a custom path in addon settings
     if addon.getSetting('custom_path') == 'true':
         # Get the custom path from addon settings
@@ -105,9 +109,12 @@ def get_path():
     else:
         # Find the path to the lutris executable
         path = find_executable("lutris").decode('utf-8')
+    # Append the path to the command list
+    cmd.append(path)
     # Log lutris executable path to kodi.log
-    log('Executable path is {}'.format(path))
-    return path
+    log('Executable path is: {}'.format(path))
+    # Return lutris path
+    return cmd
 
 
 def get_games():
@@ -135,22 +142,21 @@ def get_games():
     cmd = get_path()
     # Add arguments to the command list to fetch games from lutris as a JSON
     # object
-    cmd = cmd + ' --list-games --json'
+    cmd.extend(('--list-games', '--json'))
     # Check add on settings to see if only installed games should be fetched
     # from lutris
     if addon.getSetting('installed') == 'true':
         # Add install argument to the command list
-        cmd = cmd + ' --installed'
-    # Convert command string to list
-    cmd = cmd.split()
+        cmd.append('--installed')
     # Get the list of games from lutris as a JSON object
     raw_result = check_output(cmd)
-    # Remove extra warning messages lutris logs
+    # Remove warning messages from JSON output
     result = raw_result[raw_result.index('['):raw_result.index(']')+1]
-    # Parse the list of games from the JSON object to a Python array
+    # Parse the list of games from a JSON object to a Python array
     response = json.loads(result)
     # Log the Python array to kodi.log
-    log('JSON output is {0}'.format(response))
+    log('JSON output is: {0}'.format(response))
+    # Return game list
     return response
 
 
@@ -180,8 +186,6 @@ def list_games():
         # Set info (title, platform, genres, publisher, developer, overview,
         # year, gameclient) for the list item
         li.setInfo('game', {'title': game['name'], 'gameclient': game['runner']})
-        # Expand the path to the user's home folder
-        home = os.path.expanduser('~').decode('utf-8')
         # Get the local game artwork
         game['icon'] = os.path.join(home, '.local', 'share', 'icons', 'hicolor', '128x128', 'apps', 'lutris_' + game['slug'] + '.png')
         game['banner'] = os.path.join(home, '.local', 'share', 'lutris', 'banners', game['slug'] + '.jpg')
@@ -233,11 +237,11 @@ def run(action, id_, slug):
     # Check if action is 'play'
     if action == 'play':
         # Construct play command
-        cmd = cmd + ' lutris:rungameid/' + id_
+        cmd.append('lutris:rungameid/' + id_)
     # Check if action is 'install' or 'reinstall'
     elif action == 'install' or action == 'reinstall':
         # Construct install and reinstall command
-        cmd = cmd + ' lutris:' + slug + ' --reinstall'
+        cmd.extend(('lutris:' + slug, '--reinstall'))
     else:
         # If the provided action does not contain a supported action
         # we raise an exception
@@ -245,12 +249,10 @@ def run(action, id_, slug):
     # Stop playback if Kodi is playing any media
     if xbmc.Player().isPlaying():
         xbmc.Player().stop()
-    # Log command to kodi.log
-    log('Launch command is {0}'.format(cmd))
+    # Log command and arguments to kodi.log
+    log('Launch command is: {0}'.format(' '.join(cmd)))
     # Disable the idle shutdown timer
     inhibit_shutdown(True)
-    # Convert command string to list
-    cmd = cmd.split()
     # Launch lutris with command. Subprocess.call waits for the game
     # to finish before continuing
     call(cmd)
