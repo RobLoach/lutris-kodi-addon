@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon
-    id="script.lutris"
+    id="plugin.lutris"
     name="Lutris"
-    version="1.4.2"
+    version="2.0.0"
     provider-name="Rob Loach">
     <requires>
-        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="xbmc.python" version="3.0.0" />
+        <import addon="script.module.routing" version="0.2.3"/>
+        <import addon="script.module.simplecache" version="2.0.0" />
     </requires>
-    <extension point="xbmc.python.pluginsource" library="default.py">
+    <extension point="xbmc.python.pluginsource" library="addon.py">
         <provides>game</provides>
     </extension>
     <extension point="xbmc.addon.metadata">
@@ -16,9 +18,8 @@
         <disclaimer lang="en_GB">For more information, visit Lutris.net.</disclaimer>
         <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
         <website>http://lutris.net</website>
-        <news lang="en_GB">Version 1.4.2: September 16th, 2020
-		- Minor code improvements, by @solbero</news>
-        <source>http://github.com/robloach/script.lutris</source>
+        <news lang="en_GB"></news>
+        <source>https://github.com/RobLoach/lutris-kodi-addon</source>
         <assets>
             <icon>resources/icon.png</icon>
             <fanart>resources/fanart.jpg</fanart>
