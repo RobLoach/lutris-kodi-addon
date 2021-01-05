@@ -1,6 +1,6 @@
 # Lutris Kodi Addon
 
-[Kodi](http://kodi.tv) addon to launch games through [Lutris](http://lutris.net).
+[Kodi](http://kodi.tv) add-on to launch games through [Lutris](http://lutris.net).
 
 ![Lutris Kodi Addon Screenshot](resources/screenshot.jpg "Lutris Kodi Addon")
 
@@ -12,6 +12,10 @@
 ## Prerequisites
 
 - [Install and setup Lutris](https://lutris.net/downloads/)
+
+## Requirements
+
+- Kodi v19 Matrix or greater.
 
 ## Install from repository
 
@@ -32,8 +36,8 @@
 ## Development
 
 ```bash
-git clone git@github.com:RobLoach/script.lutris.git ~/.kodi/addons/script.lutris
-cd ~/.kodi/addons/script.lutris
+git clone git@github.com:RobLoach/lutris-kodi-addon.git ~/.kodi/addons/plugin.lutris
+cd ~/.kodi/addons/plugin.lutris
 git status
 ```
 
