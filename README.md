@@ -15,7 +15,7 @@
 
 ## Requirements
 
-- Kodi v19 Matrix or greater.
+- Kodi v19 Matrix or greater
 
 ## Install from repository
 
@@ -27,7 +27,7 @@
 
 ## Install manually
 
-1. [Download the latest version of the Lutris Kodi Addon](https://github.com/RobLoach/lutris-kodi-addon/archive/master.zip)
+1. [Download the latest version of the Lutris Kodi Addon](https://github.com/RobLoach/lutris-kodi-addon/releases/latest)
 
 1. Go to Settings → Add-ons → Install from zip file
 
