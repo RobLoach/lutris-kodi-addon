@@ -1,3 +1,10 @@
+[B]Version 2.0.0: January 8th, 2021[/B]
+- Port add-on from Python 2 to Python 3, by @solbero
+- Add 'Runners' and 'Platforms' as content categories, by @solbero
+- Port settings.xml to new settings format, by @solbero
+- Add cache support to add-on, by @solbero
+- Change add-on id to 'plugin.lutris', by @solbero
+
 [B]Version 1.4.2: September 16th, 2020[/B]
 - Minor code improvements, by @solbero
 
