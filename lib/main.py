@@ -18,8 +18,6 @@ Array = lutris.Array
 
 # Globals
 plugin = routing.Plugin()
-
-# Game array
 game_list = lutris.check_cache('games', lutris.get_games)
 
 

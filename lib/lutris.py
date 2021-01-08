@@ -12,7 +12,6 @@ import os
 import shlex
 import subprocess
 from distutils.spawn import find_executable
-from distutils.version import LooseVersion
 from typing import List, Union, Dict, Callable
 
 import simplecache
@@ -30,11 +29,6 @@ localized_string = addon_id.getLocalizedString
 
 cache = simplecache.SimpleCache()
 cache.enable_mem_cache = False
-
-home = os.path.expanduser('~/')
-home_share_icons = os.path.join(home + '.local', 'share', 'icons',
-                                'hicolor', '128x128', 'apps')
-home_share_lutris = os.path.join(home + '.local', 'share', 'lutris')
 
 
 def get_path() -> list:
@@ -233,6 +227,11 @@ def get_art_paths(slug: str):
     Returns:
         dict: Pairs of {key: path}.
     """
+    home = os.path.expanduser('~/')
+    home_share_icons = os.path.join(home + '.local', 'share', 'icons',
+                                    'hicolor', '128x128', 'apps')
+    home_share_lutris = os.path.join(home + '.local', 'share', 'lutris')
+
     art_paths = {'icon': os.path.join(home_share_icons,
                                       f"lutris_{slug}.png"),
                  'banner': os.path.join(home_share_lutris,
