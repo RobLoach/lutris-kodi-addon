@@ -14,7 +14,7 @@
     </extension>
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Lutris</summary>
-        <description lang="en_GB">Lutris Kodi Addon is a frontent for Lutris in Kodi. You need to have Lutris installed to use this add-on.</description>
+        <description lang="en_GB">Lutris Kodi Addon is a frontend for Lutris in Kodi. You need to have Lutris installed to use this add-on.</description>
         <disclaimer lang="en_GB">For more information, visit Lutris.net.</disclaimer>
         <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
         <website>http://lutris.net</website>
