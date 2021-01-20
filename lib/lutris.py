@@ -48,18 +48,15 @@ def get_path() -> list:
     if addon_id.getSettingBool('enable_custom_path'):
         try:
             result = addon_id.getSettingString('path_to_executable')
-
             if not os.path.isfile(result):
                 raise FileNotFoundError(errno.ENOENT,
                                         os.strerror(errno.ENOENT),
                                         result)
         except FileNotFoundError:
             util.show_error(localized_string(30201))
-
     else:
         try:
             result = find_executable('lutris')
-
             if result is None:
                 raise FileNotFoundError(errno.ENOENT,
                                         os.strerror(errno.ENOENT),
@@ -68,7 +65,6 @@ def get_path() -> list:
             util.show_error(localized_string(30201))
 
     util.log(f"Executable path is: {result}")
-
     path = shlex.split(str(result))
 
     return path
@@ -166,7 +162,6 @@ def check_cache(endpoint: str, func: Callable, *args, **kwargs) -> Array:
 
     if cache_:
         array = cache_
-
     else:
         array = rebuild_cache(endpoint, func, *args, **kwargs)
 
@@ -186,12 +181,11 @@ def rebuild_cache(id_: str, func, *args, **kwargs) -> Array:
         array (Array): Array returned by 'func'.
 
     """
-    util.notify_user(localized_string(30302))
-
     array = func(*args, **kwargs)
-
     days = float(addon_id.getSettingInt('cache_expire_days'))
     expiration = datetime.timedelta(days=days)
+
+    util.notify_user(localized_string(30302))
     cache.set(f"{addon_name}.{id_}", array, expiration=expiration)
 
     return array
@@ -231,7 +225,6 @@ def get_art_paths(slug: str):
     home_share_icons = os.path.join(home + '.local', 'share', 'icons',
                                     'hicolor', '128x128', 'apps')
     home_share_lutris = os.path.join(home + '.local', 'share', 'lutris')
-
     art_paths = {'icon': os.path.join(home_share_icons,
                                       f"lutris_{slug}.png"),
                  'banner': os.path.join(home_share_lutris,

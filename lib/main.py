@@ -160,17 +160,15 @@ def create_directory_items(array: Array):
         slug = str(dict_['slug'])
         runner = str(dict_['runner'])
         platform = str(dict_['platform'])
+        id_ = str(dict_['id'])
 
         item = xbmcgui.ListItem(title, offscreen=True)
         item.setProperty('IsPlayable', 'true')
         item.setInfo('game', {'title': title,
                               'platform': platform,
                               'gameclient': runner})
-
         arts_dictionary = lutris.create_arts_dictionary(slug)
         item.setArt(arts_dictionary)
-
-        id_ = dict_['id']
         url = plugin.url_for(run, id_)
 
         directory_items.append((url, item, False))
