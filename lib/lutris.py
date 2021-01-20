@@ -204,10 +204,13 @@ def create_arts_dictionary(slug: str) -> Dict[str, str]:
 
     arts_dictionary = {}
     for key, value in art_paths.items():
-        if os.path.exists(value):
-            arts_dictionary[key] = value
+        if os.path.exists(value['path']):
+            arts_dictionary[key] = value['path']
         else:
-            util.log(f"Unable to find {key} art for {slug}.")
+            if 'fallback' in value:
+                arts_dictionary[key] = value['fallback']
+            else:
+                util.log(f"Unable to find {key} art for {slug}.")
 
     return arts_dictionary
 
@@ -231,13 +234,12 @@ def get_art_paths(slug: str):
 
     art_paths = {}
     if addon_id.getSettingBool('prefer_covers'):
-        art_paths['icon'] = cover_path
-        art_paths['thumb'] = cover_path
+        art_paths['icon'] = {'path': cover_path, 'fallback': icon_path}
+        art_paths['thumb'] = {'path': cover_path, 'fallback': icon_path}
     else:
-        art_paths['icon'] = icon_path
-        art_paths['thumb'] = icon_path
-    art_paths['banner'] = banner_path
-    art_paths['poster'] = cover_path
-
+        art_paths['icon'] = {'path': icon_path}
+        art_paths['thumb'] = {'path': icon_path}
+    art_paths['banner'] = {'path': banner_path}
+    art_paths['poster'] = {'path': cover_path, 'fallback': icon_path}
 
     return art_paths
