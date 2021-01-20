@@ -56,6 +56,10 @@ msgctxt "#30106"
 msgid "Update games cache"
 msgstr "Update games cache"
 
+msgctxt "#30107"
+msgid "Prefer covers over icons"
+msgstr "Prefer covers over icons"
+
 # Errors
 
 msgctxt "#30200"

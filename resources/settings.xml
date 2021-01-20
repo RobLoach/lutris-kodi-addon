@@ -30,6 +30,13 @@
                     </dependencies>
                 </setting>
 
+                <!-- Prefer covers over icons -->
+                <setting id="prefer_covers" type="boolean" label="30107" help="">
+                    <level>1</level>
+                    <default>false</default>
+                    <control type="toggle"/>
+                </setting>
+
                 <!-- Open Lutris Application -->
                 <setting id="lutris" type="action" label="30103" help="">
                     <level>0</level>

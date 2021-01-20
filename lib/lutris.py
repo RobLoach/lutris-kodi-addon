@@ -225,13 +225,19 @@ def get_art_paths(slug: str):
     home_share_icons = os.path.join(home + '.local', 'share', 'icons',
                                     'hicolor', '128x128', 'apps')
     home_share_lutris = os.path.join(home + '.local', 'share', 'lutris')
-    art_paths = {'icon': os.path.join(home_share_icons,
-                                      f"lutris_{slug}.png"),
-                 'banner': os.path.join(home_share_lutris,
-                                        'banners', f"{slug}.jpg"),
-                 'poster': os.path.join(home_share_lutris,
-                                        'covers', f"{slug}.jpg"),
-                 'thumb': os.path.join(home_share_icons,
-                                       'banners', f"{slug}.jpg")}
+    icon_path = os.path.join(home_share_icons, f"lutris_{slug}.png")
+    banner_path = os.path.join(home_share_lutris, 'banners', f"{slug}.jpg")
+    cover_path = os.path.join(home_share_lutris, 'covers', f"{slug}.jpg")
+
+    art_paths = {}
+    if addon_id.getSettingBool('prefer_covers'):
+        art_paths['icon'] = cover_path
+        art_paths['thumb'] = cover_path
+    else:
+        art_paths['icon'] = icon_path
+        art_paths['thumb'] = icon_path
+    art_paths['banner'] = banner_path
+    art_paths['poster'] = cover_path
+
 
     return art_paths
