@@ -60,6 +60,14 @@ msgctxt "#30107"
 msgid "Prefer covers over icons"
 msgstr "Prefer covers over icons"
 
+msgctxt "#30108"
+msgid "Enable cache"
+msgstr "Enable cache"
+
+msgctxt "#30109"
+msgid "Cache games (hours)"
+msgstr "Cache games (hours)"
+
 # Errors
 
 msgctxt "#30200"

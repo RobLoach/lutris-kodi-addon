@@ -182,8 +182,15 @@ def rebuild_cache(id_: str, func, *args, **kwargs) -> Array:
 
     """
     array = func(*args, **kwargs)
-    days = float(addon_id.getSettingInt('cache_expire_days'))
-    expiration = datetime.timedelta(days=days)
+
+    if addon_id.getSettingBool('enable_cache'):
+        hours = float(addon_id.getSettingInt('cache_expire_hours'))
+        days = float(addon_id.getSettingInt('cache_expire_days'))
+        total = hours + (days * 24)
+    else:
+        total = float(0)
+
+    expiration = datetime.timedelta(hours=total)
 
     util.notify_user(localized_string(30302))
     cache.set(f"{addon_name}.{id_}", array, expiration=expiration)

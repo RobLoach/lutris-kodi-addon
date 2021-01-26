@@ -53,7 +53,30 @@
         <category id="cache" label="30104">
             <group id="2" label="">
 
+                <!-- Enable Cache -->
+                <setting id="enable_cache" type="boolean" label="30108" help="">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle"/>
+                </setting>
+
                 <!-- Set cache expiration -->
+                <setting id="cache_expire_hours" type="integer" label="30109" help="">
+                    <level>1</level>
+                    <default>0</default>
+                    <constraints>
+		                <minimum>0</minimum>
+		                <step>1</step>
+		                <maximum>24</maximum>
+	                </constraints>
+                    <control type="slider" format="integer">
+		                <popup>false</popup>
+                    </control>
+                    <dependencies>
+                        <dependency type="enable" setting="enable_cache">true</dependency>
+                    </dependencies>
+                </setting>
+
                 <setting id="cache_expire_days" type="integer" label="30105" help="">
                     <level>1</level>
                     <default>30</default>
@@ -65,6 +88,9 @@
                     <control type="slider" format="integer">
 		                <popup>false</popup>
                     </control>
+                    <dependencies>
+                        <dependency type="enable" setting="enable_cache">true</dependency>
+                    </dependencies>
                 </setting>
 
                 <!-- Update games -->
