@@ -12,26 +12,22 @@ import os
 import shlex
 import subprocess
 from distutils.spawn import find_executable
-from typing import List, Union, Dict, Callable
+from typing import Dict, List, Union
 
 import simplecache
 import xbmcaddon
 
-from . import util
-
-# Aliases
-Array = List[Dict[str, Union[str, int]]]
+import lib.util as util
 
 # Globals
-addon_id = xbmcaddon.Addon()
-addon_name = addon_id.getAddonInfo('name')
-localized_string = addon_id.getLocalizedString
+_addon_id = xbmcaddon.Addon()
+_addon_name = _addon_id.getAddonInfo('name')
+_localized = _addon_id.getLocalizedString
 
-cache = simplecache.SimpleCache()
-cache.enable_mem_cache = False
+_cache = simplecache.SimpleCache()
 
 
-def get_path() -> list:
+def _get_path() -> list:
     """Finds the path to the Lutris executable.
 
     Returns a custom path to the executable if it is defined in the
@@ -45,32 +41,31 @@ def get_path() -> list:
         list: Path to executable.
 
     """
-    if addon_id.getSettingBool('enable_custom_path'):
-        try:
-            result = addon_id.getSettingString('path_to_executable')
-            if not os.path.isfile(result):
-                raise FileNotFoundError(errno.ENOENT,
-                                        os.strerror(errno.ENOENT),
-                                        result)
-        except FileNotFoundError:
-            util.show_error(localized_string(30201))
+    enable_custom_path = _addon_id.getSettingBool('enable_custom_path')
+
+    if enable_custom_path:
+        result = _addon_id.getSettingString('custom_path')
+        if not os.path.isfile(result):
+            util.show_error(_localized(30201))
+            raise FileNotFoundError(errno.ENOENT,
+                                    os.strerror(errno.ENOENT),
+                                    result)
     else:
-        try:
-            result = find_executable('lutris')
-            if result is None:
-                raise FileNotFoundError(errno.ENOENT,
-                                        os.strerror(errno.ENOENT),
-                                        'lutris')
-        except FileNotFoundError:
-            util.show_error(localized_string(30201))
+        result = find_executable('lutris')
+        if result is None:
+            util.show_error(_localized(30201))
+            raise FileNotFoundError(errno.ENOENT,
+                                    os.strerror(errno.ENOENT),
+                                    'lutris')
 
     util.log(f"Executable path is: {result}")
+
     path = shlex.split(str(result))
 
     return path
 
 
-def get_games() -> Array:
+def _get_games() -> List[Dict[str, Union[str, int]]]:
     """Gets a list of dicts of installed games from Lutris.
 
     Note:
@@ -93,58 +88,28 @@ def get_games() -> Array:
         array: List of dictionaries of installed games.
 
     """
-    executable = get_path()
+    command = _get_path()
     flags = ['--list-games', '--installed', '--json']
-    command = executable + flags
+    command.extend(flags)
 
     try:
         result = subprocess.check_output(command)
     except subprocess.CalledProcessError:
-        util.show_error(localized_string(20202))
+        util.show_error(_localized(20202))
+        raise
 
     try:
         response = json.loads(result)
     except json.JSONDecodeError:
-        util.show_error(localized_string(30203))
+        util.show_error(_localized(30203))
+        raise
 
     util.log(f"JSON output is: {response}")
 
     return response
 
 
-def run(id_: str = None):
-    """Runs a game using Lutris.
-
-    Note:
-        Lutris is opened if 'id_' is not passed.
-
-    Args:
-        id_ (str, optional): Lutris numerical id. Defaults to None.
-
-    """
-    path = get_path()
-
-    if id_:
-        flag = [f"lutris:rungameid/{id_}"]
-        command = path + flag
-    else:
-        command = path
-
-    util.log(f"Launch command is: {' '.join(command)}")
-
-    util.stop_playback()
-    util.inhibit_idle_shutdown(True)
-
-    try:
-        subprocess.run(command, check=True)
-
-    except subprocess.CalledProcessError:
-        util.show_error(f"{localized_string(30203)}")
-
-    util.inhibit_idle_shutdown(False)
-
-
-def check_cache(endpoint: str, func: Callable, *args, **kwargs) -> Array:
+def get_cached_games() -> List[Dict[str, Union[str, int]]]:
     """Checks if a cached array object exists, if not it gets
     the array object using the supplied function and caches it.
 
@@ -158,17 +123,17 @@ def check_cache(endpoint: str, func: Callable, *args, **kwargs) -> Array:
         array (Array): Array returned by 'func'.
 
     """
-    cache_ = cache.get(f"{addon_name}.{endpoint}")
+    cached_games = _cache.get(f"{_addon_name}.{'games'}")
 
-    if cache_:
-        array = cache_
+    if cached_games:
+        games = cached_games
     else:
-        array = rebuild_cache(endpoint, func, *args, **kwargs)
+        games = update_cache()
 
-    return array
+    return games
 
 
-def rebuild_cache(id_: str, func, *args, **kwargs) -> Array:
+def update_cache() -> List[Dict[str, Union[str, int]]]:
     """Gets an array object using the supplied function and caches it.
 
     Args:
@@ -181,24 +146,56 @@ def rebuild_cache(id_: str, func, *args, **kwargs) -> Array:
         array (Array): Array returned by 'func'.
 
     """
-    array = func(*args, **kwargs)
+    games = _get_games()
 
-    if addon_id.getSettingBool('enable_cache'):
-        hours = float(addon_id.getSettingInt('cache_expire_hours'))
-        days = float(addon_id.getSettingInt('cache_expire_days'))
+    if _addon_id.getSettingBool('enable_cache'):
+        hours = float(_addon_id.getSettingInt('cache_expire_hours'))
+        days = float(_addon_id.getSettingInt('cache_expire_days'))
         total = hours + (days * 24)
     else:
         total = float(0)
 
     expiration = datetime.timedelta(hours=total)
 
-    util.notify_user(localized_string(30302))
-    cache.set(f"{addon_name}.{id_}", array, expiration=expiration)
+    util.notify_user(_localized(30302))
 
-    return array
+    _cache.set(f"{_addon_name}.{'games'}", games, expiration=expiration)
+
+    return games
 
 
-def create_arts_dictionary(slug: str) -> Dict[str, str]:
+def run(*args: List[str]):
+    """Runs a game using Lutris.
+
+    Note:
+        Lutris is opened if 'id_' is not passed.
+
+    Args:
+        id_ (str, optional): Lutris numerical id. Defaults to None.
+
+    """
+    command = _get_path()
+
+    if args:
+        for arg in args:
+            command.extend(arg)
+
+    util.log(f"Launch command is: {' '.join(command)}")
+
+    util.stop_playback()
+    util.inhibit_idle_shutdown(True)
+
+    try:
+        subprocess.run(command, check=True)
+
+    except subprocess.CalledProcessError:
+        util.show_error(f"{_localized(30203)}")
+        raise
+
+    util.inhibit_idle_shutdown(False)
+
+
+def get_art(slug: str) -> Dict[str, str]:
     """Creates a dict of available artwork.
 
     Args:
@@ -207,22 +204,22 @@ def create_arts_dictionary(slug: str) -> Dict[str, str]:
     Returns:
         Dict[str, str]: Pairs of {key: path}.
     """
-    art_paths = get_art_paths(slug)
+    art_paths = _get_art_paths(slug)
 
-    arts_dictionary = {}
+    art = {}
     for key, value in art_paths.items():
         if os.path.exists(value['path']):
-            arts_dictionary[key] = value['path']
+            art[key] = value['path']
         else:
             if 'fallback' in value:
-                arts_dictionary[key] = value['fallback']
+                art[key] = value['fallback']
             else:
                 util.log(f"Unable to find {key} art for {slug}.")
 
-    return arts_dictionary
+    return art
 
 
-def get_art_paths(slug: str):
+def _get_art_paths(slug: str):
     """Get paths to artwork.
 
     Args:
@@ -232,20 +229,24 @@ def get_art_paths(slug: str):
         dict: Pairs of {key: path}.
     """
     home = os.path.expanduser('~/')
-    home_share_icons = os.path.join(home + '.local', 'share', 'icons',
+    icons = os.path.join(home + '.local', 'share', 'icons',
                                     'hicolor', '128x128', 'apps')
-    home_share_lutris = os.path.join(home + '.local', 'share', 'lutris')
-    icon_path = os.path.join(home_share_icons, f"lutris_{slug}.png")
-    banner_path = os.path.join(home_share_lutris, 'banners', f"{slug}.jpg")
-    cover_path = os.path.join(home_share_lutris, 'covers', f"{slug}.jpg")
+    lutris = os.path.join(home + '.local', 'share', 'lutris')
+
+    icon_path = os.path.join(icons, f"lutris_{slug}.png")
+    banner_path = os.path.join(lutris, 'banners', f"{slug}.jpg")
+    cover_path = os.path.join(lutris, 'covers', f"{slug}.jpg")
+
+    prefer_covers = _addon_id.getSettingBool('prefer_covers')
 
     art_paths = {}
-    if addon_id.getSettingBool('prefer_covers'):
+    if prefer_covers:
         art_paths['icon'] = {'path': cover_path, 'fallback': icon_path}
         art_paths['thumb'] = {'path': cover_path, 'fallback': icon_path}
     else:
         art_paths['icon'] = {'path': icon_path}
         art_paths['thumb'] = {'path': icon_path}
+
     art_paths['banner'] = {'path': banner_path}
     art_paths['poster'] = {'path': cover_path, 'fallback': icon_path}
 

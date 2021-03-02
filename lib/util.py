@@ -10,9 +10,9 @@ import xbmcaddon
 import xbmcgui
 
 # Globals
-addon_id = xbmcaddon.Addon()
-addon_name = addon_id.getAddonInfo('name')
-localized_string = addon_id.getLocalizedString
+_addon_id = xbmcaddon.Addon()
+_addon_name = _addon_id.getAddonInfo('name')
+_localized = _addon_id.getLocalizedString
 
 
 def log(msg: str, lvl: int = 1):
@@ -36,11 +36,11 @@ def log(msg: str, lvl: int = 1):
         lvl (int, optional): Severity level. Defaults to 1.
 
     """
-    message = f"{addon_name}: {msg}"
+    message = f"{_addon_name}: {msg}"
     xbmc.log(message, lvl)
 
 
-def notify_user(msg: str, heading: str = addon_name,
+def notify_user(msg: str, heading: str = _addon_name,
                 icon=xbmcgui.NOTIFICATION_INFO):
     """Displays a notification to the user. Add-on name is added as a
     heading to the message.
@@ -69,21 +69,21 @@ def show_error(msg: str):
         msg (str): Message to display.
 
     """
-    error_message = f"{msg}. {localized_string(30200)}."
-    heading = f"{addon_name} {localized_string(30301)}"
+    error_message = f"{msg}. {_localized(30200)}."
+    heading = f"{_addon_name} {_localized(30301)}"
 
     notify_user(error_message, heading, icon=xbmcgui.NOTIFICATION_ERROR)
 
 
-def inhibit_idle_shutdown(bool_: bool):
+def inhibit_idle_shutdown(bool: bool):
     """Enables or disables the Kodi idle shutdown timer.
 
     Args:
         bool_ (bool): True for enable, False for disable.
 
     """
-    xbmc.executebuiltin(f"InhibitIdleShutdown({str(bool_).lower()})")
-    log(f"Inhibit idle shutdown is: {bool_}")
+    xbmc.executebuiltin(f"InhibitIdleShutdown({str(bool).lower()})")
+    log(f"Inhibit idle shutdown is: {bool}")
 
 
 def stop_playback():

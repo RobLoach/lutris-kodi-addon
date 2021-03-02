@@ -14,7 +14,7 @@
                 </setting>
 
                 <!-- Lutris Executable Path -->
-                <setting id="path_to_executable" type="path" label="30102" help="" parent="custom_path">
+                <setting id="custom_path" type="path" label="30102" help="" parent="custom_path">
                     <level>1</level>
                     <default>/usr/games/lutris</default>
                     <constraints>
@@ -40,7 +40,7 @@
                 <!-- Open Lutris Application -->
                 <setting id="lutris" type="action" label="30103" help="">
                     <level>0</level>
-                    <data>RunPlugin(plugin://plugin.lutris/lutris/)</data>
+                    <data>RunPlugin(plugin://plugin.lutris/run)</data>
                     <control type="button" format="action">
                         <close>true</close>
                     </control>
