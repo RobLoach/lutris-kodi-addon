@@ -1,6 +1,6 @@
 # Lutris Kodi Addon
 
-[Kodi](http://kodi.tv) addon to launch games through [Lutris](http://lutris.net).
+[Kodi](http://kodi.tv) add-on to launch games through [Lutris](http://lutris.net).
 
 ![Lutris Kodi Addon Screenshot](resources/screenshot.jpg "Lutris Kodi Addon")
 
@@ -13,6 +13,12 @@
 
 - [Install and setup Lutris](https://lutris.net/downloads/)
 
+## Requirements
+
+- Kodi v19 Matrix or greater
+
+If using Kodi v18 Leia or lesser you can download and manually install [v1.4.3](https://github.com/RobLoach/lutris-kodi-addon/archive/1.4.3.zip) of the add-on.
+
 ## Install from repository
 
 1. Make sure that Unknown Sources is enabled in Settings → System → Add-ons
@@ -23,7 +29,7 @@
 
 ## Install manually
 
-1. [Download the latest version of the Lutris Kodi Addon](https://github.com/RobLoach/lutris-kodi-addon/archive/master.zip)
+1. [Download the latest version of the Lutris Kodi Addon](https://github.com/RobLoach/lutris-kodi-addon/releases/latest)
 
 1. Go to Settings → Add-ons → Install from zip file
 
@@ -32,8 +38,8 @@
 ## Development
 
 ```bash
-git clone git@github.com:RobLoach/script.lutris.git ~/.kodi/addons/script.lutris
-cd ~/.kodi/addons/script.lutris
+git clone git@github.com:RobLoach/lutris-kodi-addon.git ~/.kodi/addons/plugin.lutris
+cd ~/.kodi/addons/plugin.lutris
 git status
 ```
 

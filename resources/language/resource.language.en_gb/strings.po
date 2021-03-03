@@ -1,6 +1,6 @@
 # Kodi Media Center language file
-# Addon Name: lutris-kodi-addon
-# Addon id: script.lutris
+# Addon Name: Lutris
+# Addon id: plugin.lutris
 # Addon Provider: RobLoach
 msgid ""
 msgstr ""
@@ -16,62 +16,88 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# General
-
-msgctxt "#30000"
-msgid "My Lutris Collection"
-msgstr "My Lutris Collection"
-
 # Settings
 
 msgctxt "#30100"
-msgid "General"
-msgstr "General"
+msgid "Lutris"
+msgstr "Lutris"
 
 msgctxt "#30101"
-msgid "Path to Lutris executable"
-msgstr "Path to Lutris executable"
-
-msgctxt "#30102"
-msgid "Display only installed games"
-msgstr "Display only installed games"
-
-msgctxt "#30103"
 msgid "Enable custom path"
 msgstr "Enable custom path"
 
-msgctxt "#30104"
+msgctxt "#30102"
+msgid "Path to executable"
+msgstr "Path to executable"
+
+msgctxt "#30103"
 msgid "Open Lutris"
 msgstr "Open Lutris"
 
-# Contextual Menu
+msgctxt "#30104"
+msgid "Cache"
+msgstr "Cache"
+
+msgctxt "#30105"
+msgid "View"
+msgstr "View"
+
+msgctxt "#30106"
+msgid "Update cache"
+msgstr "Update cache"
+
+msgctxt "#30107"
+msgid "Prefer covers over icons"
+msgstr "Prefer covers over icons"
+
+msgctxt "#30108"
+msgid "Enable cache"
+msgstr "Enable cache"
+
+msgctxt "#30109"
+msgid "Cache (hours)"
+msgstr "Cache (hours)"
+
+# Errors
 
 msgctxt "#30200"
-msgid "Reinstall"
-msgstr "Reinstall"
+msgid "Check the log for more information"
+msgstr "Check the log for more information"
 
 msgctxt "#30201"
-msgid "Install"
-msgstr "Install"
+msgid "Unable to find the executable"
+msgstr "Unable to find the executable"
 
 msgctxt "#30202"
-msgid "Information"
-msgstr "Information"
+msgid "Unable to get a list of installed games"
+msgstr "Unable to get a list of installed games"
 
 msgctxt "#30203"
-msgid "Settings"
-msgstr "Settings"
+msgid "Unable to parse the list of installed games"
+msgstr "Unable to parse the list of installed games"
 
-# Dialog Boxes
+msgctxt "#30204"
+msgid "Unable to launch"
+msgstr "Unable to launch"
+
+msgctxt "#30205"
+msgid "Unable to get Lutris version number"
+msgstr "Unable to get Lutris version number"
+
+msgctxt "#30206"
+msgid "More than one item in dict passed to run function"
+msgstr "More than one item in dict passed to run function"
+
+# Dialog Messages
 
 msgctxt "#30300"
-msgid "Launching {0}"
-msgstr "Launching {0}"
+msgid "Launching"
+msgstr "Launching"
 
 msgctxt "#30301"
-msgid "Installing {0}"
-msgstr "Installing {0}"
+msgid "error"
+msgstr "error"
 
 msgctxt "#30302"
-msgid "Reinstalling {0}"
-msgstr "Reinstalling {0}"
+msgid "Cache updating"
+msgstr "Cache updating"
