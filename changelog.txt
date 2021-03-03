@@ -1,3 +1,6 @@
+[B]Version 1.4.3: February 3rd, 2021[/B]
+- Remove workaround from issue #47, by @solbero
+
 [B]Version 1.4.2: September 16th, 2020[/B]
 - Minor code improvements, by @solbero
 
