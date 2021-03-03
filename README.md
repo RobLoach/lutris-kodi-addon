@@ -17,6 +17,8 @@
 
 - Kodi v19 Matrix or greater
 
+If using Kodi v18 Leia or lesser you can download and manually install [v1.4.3](https://github.com/RobLoach/lutris-kodi-addon/archive/1.4.3.zip) of the add-on.
+
 ## Install from repository
 
 1. Make sure that Unknown Sources is enabled in Settings → System → Add-ons
