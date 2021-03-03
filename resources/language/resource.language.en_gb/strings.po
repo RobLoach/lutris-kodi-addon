@@ -1,5 +1,5 @@
 # Kodi Media Center language file
-# Addon Name: lutris-kodi-addon
+# Addon Name: Lutris
 # Addon id: plugin.lutris
 # Addon Provider: RobLoach
 msgid ""
@@ -16,25 +16,19 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# General
-
-msgctxt "#30000"
-msgid "My Lutris Collection"
-msgstr "My Lutris Collection"
-
 # Settings
 
 msgctxt "#30100"
-msgid "General"
-msgstr "General"
+msgid "Lutris"
+msgstr "Lutris"
 
 msgctxt "#30101"
 msgid "Enable custom path"
 msgstr "Enable custom path"
 
 msgctxt "#30102"
-msgid "Path to Lutris executable"
-msgstr "Path to Lutris executable"
+msgid "Path to executable"
+msgstr "Path to executable"
 
 msgctxt "#30103"
 msgid "Open Lutris"
@@ -44,17 +38,13 @@ msgctxt "#30104"
 msgid "Cache"
 msgstr "Cache"
 
-msgctxt "#30104"
-msgid "Cache"
-msgstr "Cache"
-
 msgctxt "#30105"
-msgid "Cache games (days)"
-msgstr "Cache games (days)"
+msgid "View"
+msgstr "View"
 
 msgctxt "#30106"
-msgid "Update games cache"
-msgstr "Update games cache"
+msgid "Update cache"
+msgstr "Update cache"
 
 msgctxt "#30107"
 msgid "Prefer covers over icons"
@@ -65,8 +55,8 @@ msgid "Enable cache"
 msgstr "Enable cache"
 
 msgctxt "#30109"
-msgid "Cache games (hours)"
-msgstr "Cache games (hours)"
+msgid "Cache (hours)"
+msgstr "Cache (hours)"
 
 # Errors
 
@@ -94,6 +84,10 @@ msgctxt "#30205"
 msgid "Unable to get Lutris version number"
 msgstr "Unable to get Lutris version number"
 
+msgctxt "#30206"
+msgid "More than one item in dict passed to run function"
+msgstr "More than one item in dict passed to run function"
+
 # Dialog Messages
 
 msgctxt "#30300"
@@ -105,5 +99,5 @@ msgid "error"
 msgstr "error"
 
 msgctxt "#30302"
-msgid "Games cache updated"
-msgstr "Games cache updated"
+msgid "Cache updating"
+msgstr "Cache updating"
