@@ -6,6 +6,18 @@
         <category id="general" label="30100">
             <group id="1" label="">
 
+                <!-- Open Lutris Application -->
+                <setting id="lutris" type="action" label="30103" help="">
+                    <level>0</level>
+                    <data>RunPlugin(plugin://plugin.lutris/run)</data>
+                    <control type="button" format="action">
+                        <close>true</close>
+                    </control>
+                </setting>
+
+            </group>
+            <group id="2" label="">
+
                 <!-- Enable Custom Path -->
                 <setting id="enable_custom_path" type="boolean" label="30101" help="">
                     <level>1</level>
@@ -14,7 +26,7 @@
                 </setting>
 
                 <!-- Lutris Executable Path -->
-                <setting id="custom_path" type="path" label="30102" help="" parent="custom_path">
+                <setting id="custom_path" type="path" label="30102" help="" parent="enable_custom_path">
                     <level>1</level>
                     <default>/usr/games/lutris</default>
                     <constraints>
@@ -26,9 +38,17 @@
                         <heading>30101</heading>
                     </control>
                     <dependencies>
-                        <dependency type="enable" setting="enable_custom_path">true</dependency>
+                        <dependency type="visible" setting="enable_custom_path">true</dependency>
                     </dependencies>
                 </setting>
+
+            </group>
+        </category>
+
+
+        <!-- View -->
+        <category id="view" label="30105">
+            <group id="3" label="">
 
                 <!-- Prefer covers over icons -->
                 <setting id="prefer_covers" type="boolean" label="30107" help="">
@@ -37,61 +57,12 @@
                     <control type="toggle"/>
                 </setting>
 
-                <!-- Open Lutris Application -->
-                <setting id="lutris" type="action" label="30103" help="">
-                    <level>0</level>
-                    <data>RunPlugin(plugin://plugin.lutris/run)</data>
-                    <control type="button" format="action">
-                        <close>true</close>
-                    </control>
-                </setting>
-
             </group>
         </category>
 
         <!-- General -->
         <category id="cache" label="30104">
-            <group id="2" label="">
-
-                <!-- Enable Cache -->
-                <setting id="enable_cache" type="boolean" label="30108" help="">
-                    <level>0</level>
-                    <default>true</default>
-                    <control type="toggle"/>
-                </setting>
-
-                <!-- Set cache expiration -->
-                <setting id="cache_expire_hours" type="integer" label="30109" help="">
-                    <level>1</level>
-                    <default>0</default>
-                    <constraints>
-		                <minimum>0</minimum>
-		                <step>1</step>
-		                <maximum>24</maximum>
-	                </constraints>
-                    <control type="slider" format="integer">
-		                <popup>false</popup>
-                    </control>
-                    <dependencies>
-                        <dependency type="enable" setting="enable_cache">true</dependency>
-                    </dependencies>
-                </setting>
-
-                <setting id="cache_expire_days" type="integer" label="30105" help="">
-                    <level>1</level>
-                    <default>30</default>
-                    <constraints>
-		                <minimum>0</minimum>
-		                <step>1</step>
-		                <maximum>30</maximum>
-	                </constraints>
-                    <control type="slider" format="integer">
-		                <popup>false</popup>
-                    </control>
-                    <dependencies>
-                        <dependency type="enable" setting="enable_cache">true</dependency>
-                    </dependencies>
-                </setting>
+            <group id="4" label="">
 
                 <!-- Update games -->
                 <setting id="update" type="action" label="30106" help="">
@@ -103,6 +74,34 @@
                 </setting>
 
             </group>
+            <group id="5" label="">
+
+                <!-- Enable Cache -->
+                <setting id="enable_cache" type="boolean" label="30108" help="">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle"/>
+                </setting>
+
+                <!-- Set cache expiration -->
+                <setting id="cache_expire_hours" type="integer" label="30109" help="" parent="enable_cache">
+                    <level>1</level>
+                    <default>6</default>
+                    <constraints>
+		                <minimum>0</minimum>
+		                <step>1</step>
+		                <maximum>12</maximum>
+	                </constraints>
+                    <control type="slider" format="integer">
+		                <popup>false</popup>
+                    </control>
+                    <dependencies>
+                        <dependency type="visible" setting="enable_cache">true</dependency>
+                    </dependencies>
+                </setting>
+
+            </group>
         </category>
+
     </section>
 </settings>
