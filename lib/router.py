@@ -8,19 +8,23 @@
 from typing import Callable, Dict, List, Set, Union
 
 import routing
+import xbmcaddon
 import xbmcgui
 import xbmcplugin
 
 import lib.lutris as lutris
+import lib.util as util
 
 # Globals
 _plugin = routing.Plugin()
+_addon_id = xbmcaddon.Addon()
 _addon_handle = _plugin.handle
+_localized = _addon_id.getLocalizedString
 
 
 @_plugin.route('/')
 def index():
-    """Creates a main menu for the add-on"""
+    """Creates an index menu for the add-on"""
     games = lutris.get_cached_games()
     is_folder = True
 
@@ -28,16 +32,11 @@ def index():
                                 _plugin.url_for(all),
                                 xbmcgui.ListItem("All"),
                                 is_folder)
-    # Check if the key 'platform' is in the list of dicts. Do not display
-    # this menu item if it is missing.
     if 'platform' in games[0]:
         xbmcplugin.addDirectoryItem(_addon_handle,
                                     _plugin.url_for(platforms),
                                     xbmcgui.ListItem("Platforms"),
                                     is_folder)
-
-    # Check if the key 'runner' is in the list of dicts. Do not display
-    # this menu item if it is missing.
     if 'runner' in games[0]:
         xbmcplugin.addDirectoryItem(_addon_handle,
                                     _plugin.url_for(runners),
@@ -49,7 +48,7 @@ def index():
 
 @_plugin.route('/all')
 def all():
-    """Creates game list items in Kodi for the 'All' folder."""
+    """Creates a folder that list all managed games"""
     games = lutris.get_cached_games()
 
     set_items_list(games)
@@ -57,23 +56,19 @@ def all():
 
 @_plugin.route('/platforms')
 def platforms():
-    """Creates platform folders in Kodi based on platforms in the
-    game array.
-
-    """
+    """Creates platform folders based on the platforms of managed games."""
     games = lutris.get_cached_games()
-    platforms = {game['platform'] for game in games}
+    platforms = {str(game['platform']) for game in games}
 
     set_directory_list(platforms, platform)
 
 
 @_plugin.route('/platforms/<platform>')
 def platform(platform: str):
-    """Creates game list items in Kodi for a specific platform folder.
+    """Lists games in a specific platform folder.
 
     Args:
         platform (str): Platform folder to populate.
-
     """
     games = lutris.get_cached_games()
     platform_games = [game for game in games if game['platform'] == platform]
@@ -83,20 +78,19 @@ def platform(platform: str):
 
 @_plugin.route('/runners')
 def runners():
-    """Creates runner folders in Kodi based on runners in the game array."""
+    """Creates runner folders based on the runners of managed games."""
     games = lutris.get_cached_games()
-    runners = {game['runner'] for game in games}
+    runners = {str(game['runner']) for game in games}
 
     set_directory_list(runners, runner)
 
 
 @_plugin.route('/runners/<runner>')
 def runner(runner: str):
-    """Creates game list items in Kodi for a specific platform folder.
+    """List games in a specific runner folder.
 
     Args:
-        platform (str): Platform folder to populate.
-
+        runner (str): Runner folder to populate.
     """
     games = lutris.get_cached_games()
     runner_games = [game for game in games if game['runner'] == runner]
@@ -106,23 +100,29 @@ def runner(runner: str):
 
 @_plugin.route('/run')
 def run():
-    """Runs a game list item."""
-    args = _plugin.args['args']
-    print(args)
+    """Runs a game
+
+    Note:
+        Passes the 'kwargs' of 'plugin.url_for' as a dict to 'lutris.run'.
+        If dict is empty Lutris is opened.
+    """
+    args = _plugin.args
     lutris.run(args)
 
 
 @_plugin.route('/update')
 def update():
     """Updates the games cache."""
+    util.notify_user(_localized(30302))
     lutris.update_cache()
 
 
 def set_items_list(games: List[Dict[str, Union[str, int]]]):
-    """Creates a list of ListItems.
+    """Creates list items from the supplied games list.
 
     Args:
-        array (Array): List of dicts to create ListItems from.
+        games (List[Dict[str, Union[str, int]]]): Games list to create list
+            items from.
     """
     xbmcplugin.setContent(_addon_handle, 'games')
     xbmcplugin.addSortMethod(_addon_handle,
@@ -136,7 +136,7 @@ def set_items_list(games: List[Dict[str, Union[str, int]]]):
         id = str(game['id'])
 
         art = lutris.get_art(slug)
-        url = _plugin.url_for(run, args=f"lutris:rungameid/{id}")
+        url = _plugin.url_for(run, id=id)
         is_folder = False
 
         item = xbmcgui.ListItem(title, offscreen=True)
@@ -151,22 +151,22 @@ def set_items_list(games: List[Dict[str, Union[str, int]]]):
     xbmcplugin.endOfDirectory(_addon_handle)
 
 
-def set_directory_list(entries: Set[str], func: Callable):
-    """Create a list of folder ListItems from a set of unique labels.
+def set_directory_list(labels: Set[str], func: Callable):
+    """Creates folder items from a set of labels.
 
     Args:
         labels (set): Set of unique labels
-        func (Callable): Fuction to pass to 'plugin.route'.
+        func (Callable): Function to pass to 'plugin.route'.
     """
     xbmcplugin.setContent(_addon_handle, 'files')
     xbmcplugin.addSortMethod(_addon_handle,
                              xbmcplugin.SORT_METHOD_LABEL)
 
-    for entry in entries:
-        url = _plugin.url_for(func, entry)
+    for label in labels:
+        url = _plugin.url_for(func, label)
         is_folder = True
 
-        item = xbmcgui.ListItem(entry.capitalize())
+        item = xbmcgui.ListItem(label.capitalize())
         item.setProperty('IsPlayable', 'false')
 
         xbmcplugin.addDirectoryItem(_addon_handle, url, item, is_folder)

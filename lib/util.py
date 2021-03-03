@@ -34,7 +34,6 @@ def log(msg: str, lvl: int = 1):
     Args:
         msg (str): Message to write to kodi.log.
         lvl (int, optional): Severity level. Defaults to 1.
-
     """
     message = f"{_addon_name}: {msg}"
     xbmc.log(message, lvl)
@@ -57,7 +56,6 @@ def notify_user(msg: str, heading: str = _addon_name,
             Defaults to '_addon_name'.
         icon (str, optional): Notification icon to follow message.
             Defaults to 'xbmcgui.NOTIFICATION_INFO'.
-
     """
     xbmcgui.Dialog().notification(heading, msg, icon)
 
@@ -67,20 +65,18 @@ def show_error(msg: str):
 
     Args:
         msg (str): Message to display.
-
     """
-    error_message = f"{msg}. {_localized(30200)}."
+    error = f"{msg}. {_localized(30200)}."
     heading = f"{_addon_name} {_localized(30301)}"
 
-    notify_user(error_message, heading, icon=xbmcgui.NOTIFICATION_ERROR)
+    notify_user(error, heading, icon=xbmcgui.NOTIFICATION_ERROR)
 
 
 def inhibit_idle_shutdown(bool: bool):
     """Enables or disables the Kodi idle shutdown timer.
 
     Args:
-        bool_ (bool): True for enable, False for disable.
-
+        bool (bool): True for enable, False for disable.
     """
     xbmc.executebuiltin(f"InhibitIdleShutdown({str(bool).lower()})")
     log(f"Inhibit idle shutdown is: {bool}")

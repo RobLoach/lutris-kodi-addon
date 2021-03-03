@@ -20,11 +20,10 @@ import xbmcaddon
 import lib.util as util
 
 # Globals
+_cache = simplecache.SimpleCache()
 _addon_id = xbmcaddon.Addon()
 _addon_name = _addon_id.getAddonInfo('name')
 _localized = _addon_id.getLocalizedString
-
-_cache = simplecache.SimpleCache()
 
 
 def _get_path() -> list:
@@ -38,7 +37,7 @@ def _get_path() -> list:
         FileNotFoundError: If unable to find executable.
 
     Returns:
-        list: Path to executable.
+        path (list): Path to executable.
 
     """
     enable_custom_path = _addon_id.getSettingBool('enable_custom_path')
@@ -85,12 +84,11 @@ def _get_games() -> List[Dict[str, Union[str, int]]]:
         ]
 
     Returns:
-        array: List of dictionaries of installed games.
-
+        games (List[Dict[str, Union[str, int]]]): Games list of managed games.
     """
-    command = _get_path()
+    path = _get_path()
     flags = ['--list-games', '--installed', '--json']
-    command.extend(flags)
+    command = path + flags
 
     try:
         result = subprocess.check_output(command)
@@ -110,22 +108,17 @@ def _get_games() -> List[Dict[str, Union[str, int]]]:
 
 
 def get_cached_games() -> List[Dict[str, Union[str, int]]]:
-    """Checks if a cached array object exists, if not it gets
-    the array object using the supplied function and caches it.
-
-    Args:
-        endpoint (str): Name of the cache object.
-        func (Callable): Function to call.
-        *args: 'func' arguments.
-        **kwargs: 'func' keyword arguments.
+    """Checks if a cached games list exists, if not it gets
+    the games list and caches it.
 
     Returns:
-        array (Array): Array returned by 'func'.
+        games (List[Dict[str, Union[str, int]]]): Games list of managed games.
 
     """
     cached_games = _cache.get(f"{_addon_name}.{'games'}")
+    enable_cache = _addon_id.getSettingBool('enable_cache')
 
-    if cached_games:
+    if cached_games and enable_cache:
         games = cached_games
     else:
         games = update_cache()
@@ -134,60 +127,56 @@ def get_cached_games() -> List[Dict[str, Union[str, int]]]:
 
 
 def update_cache() -> List[Dict[str, Union[str, int]]]:
-    """Gets an array object using the supplied function and caches it.
-
-    Args:
-        endpoint (str): Name of cache object.
-        func (Callable): Function to call.
-        *args: 'func' arguments.
-        **kwargs: 'func' keyword arguments.
+    """Gets the games list and caches it.
 
     Returns:
-        array (Array): Array returned by 'func'.
-
+        games (List[Dict[str, Union[str, int]]]): Games list of managed games.
     """
     games = _get_games()
 
     if _addon_id.getSettingBool('enable_cache'):
         hours = float(_addon_id.getSettingInt('cache_expire_hours'))
-        days = float(_addon_id.getSettingInt('cache_expire_days'))
-        total = hours + (days * 24)
     else:
-        total = float(0)
+        hours = float(0)
 
-    expiration = datetime.timedelta(hours=total)
-
-    util.notify_user(_localized(30302))
+    expiration = datetime.timedelta(hours=hours)
 
     _cache.set(f"{_addon_name}.{'games'}", games, expiration=expiration)
 
     return games
 
 
-def run(*args: List[str]):
+def run(args: Dict[str, List[str]]):
     """Runs a game using Lutris.
 
     Note:
-        Lutris is opened if 'id_' is not passed.
+        Passed dict must contain only one entry. Lutris is opened if
+        dict is empty.
 
     Args:
-        id_ (str, optional): Lutris numerical id. Defaults to None.
+        args (dict): Lutris game id or slug as pair of {key: value}.
 
     """
-    command = _get_path()
+    path = _get_path()
 
-    if args:
-        for arg in args:
-            command.extend(arg)
+    if len(args) > 1:
+        util.show_error(_localized(30206))
+        raise ValueError(errno.EINVAL, os.strerror(errno.ENOENT), args)
+    elif 'id' in args:
+        flag = [f"lutris:rungameid/{args['id'][0]}"]
+        command = path + flag
+    elif 'slug' in args:
+        flag = [f"lutris:rungame/{args['slug'][0]}"]
+        command = path + flag
+    else:
+        command = path
 
     util.log(f"Launch command is: {' '.join(command)}")
-
     util.stop_playback()
     util.inhibit_idle_shutdown(True)
 
     try:
         subprocess.run(command, check=True)
-
     except subprocess.CalledProcessError:
         util.show_error(f"{_localized(30203)}")
         raise
@@ -196,13 +185,13 @@ def run(*args: List[str]):
 
 
 def get_art(slug: str) -> Dict[str, str]:
-    """Creates a dict of available artwork.
+    """Creates a dict of available art for a game.
 
     Args:
         slug (str): Lutris game slug
 
     Returns:
-        Dict[str, str]: Pairs of {key: path}.
+        art (Dict[str, str]): Pairs of {key: path}.
     """
     art_paths = _get_art_paths(slug)
 
@@ -219,18 +208,18 @@ def get_art(slug: str) -> Dict[str, str]:
     return art
 
 
-def _get_art_paths(slug: str):
-    """Get paths to artwork.
+def _get_art_paths(slug: str) -> Dict[str, Dict[str, str]]:
+    """Gets paths to game art for a game.
 
     Args:
         slug (str): Lutris game slug
 
     Returns:
-        dict: Pairs of {key: path}.
+        art_paths (Dict[str, [Dict[str, str]]]): Pairs of {key: path}.
     """
     home = os.path.expanduser('~/')
     icons = os.path.join(home + '.local', 'share', 'icons',
-                                    'hicolor', '128x128', 'apps')
+                         'hicolor', '128x128', 'apps')
     lutris = os.path.join(home + '.local', 'share', 'lutris')
 
     icon_path = os.path.join(icons, f"lutris_{slug}.png")
