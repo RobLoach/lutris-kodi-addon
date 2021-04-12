@@ -32,12 +32,14 @@ def index():
                                 _plugin.url_for(all),
                                 xbmcgui.ListItem("All"),
                                 is_folder)
-    if 'platform' in games[0]:
+
+    if check_key('platform', games):
         xbmcplugin.addDirectoryItem(_addon_handle,
                                     _plugin.url_for(platforms),
                                     xbmcgui.ListItem("Platforms"),
                                     is_folder)
-    if 'runner' in games[0]:
+
+    if check_key('runner', games):
         xbmcplugin.addDirectoryItem(_addon_handle,
                                     _plugin.url_for(runners),
                                     xbmcgui.ListItem("Runners"),
@@ -172,6 +174,14 @@ def set_directory_list(labels: Set[str], func: Callable):
         xbmcplugin.addDirectoryItem(_addon_handle, url, item, is_folder)
 
     xbmcplugin.endOfDirectory(_addon_handle)
+
+
+def check_key(key: str, games: List[Dict[str, Union[str, int]]]):
+    for game in games:
+        if game.get(key):
+            return True
+
+    return False
 
 
 def main():
