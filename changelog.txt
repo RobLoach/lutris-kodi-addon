@@ -1,3 +1,6 @@
+[B]Version 2.0.1: April 12th, 2021[/B]
+- Fix keyvalue errors, by @solbero
+
 [B]Version 2.0.0: February 3rd, 2021[/B]
 - Port add-on from Python 2 to Python 3, by @solbero
 - Add 'Runners' and 'Platforms' as content categories, by @solbero
