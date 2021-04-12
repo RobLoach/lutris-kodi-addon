@@ -88,6 +88,10 @@ msgctxt "#30206"
 msgid "More than one item in dict passed to run function"
 msgstr "More than one item in dict passed to run function"
 
+msgctxt "#30207"
+msgid "Unknown"
+msgstr "Unknown"
+
 # Dialog Messages
 
 msgctxt "#30300"

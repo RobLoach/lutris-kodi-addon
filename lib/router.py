@@ -131,11 +131,11 @@ def set_items_list(games: List[Dict[str, Union[str, int]]]):
                              xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
 
     for game in games:
-        title = str(game['name'])
-        slug = str(game['slug'])
-        runner = str(game['runner'])
-        platform = str(game['platform'])
-        id = str(game['id'])
+        title = str(game.get('name', _localized(30207)))
+        slug = str(game.get('slug', _localized(30207)))
+        runner = str(game.get('runner', _localized(30207)))
+        platform = str(game.get('platform', _localized(30207)))
+        id = str(game.get('id', _localized(30207)))
 
         art = lutris.get_art(slug)
         url = _plugin.url_for(run, id=id)
