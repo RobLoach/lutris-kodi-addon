@@ -13,13 +13,13 @@
 
 - [Install and setup Lutris](https://lutris.net/downloads/)
 
-## Requirements
+## Install from repository (Matrix)
 
-- Kodi v19 Matrix or greater
+1. Make sure that Unknown Sources is enabled in Settings → System → Add-ons
+1. [Install solbero's Kodi add-on repository](https://github.com/solbero/repository.solbero.matrix/blob/master/README.md)
+1. Visit Home → Settings → Add-ons → Install from repository → solbero’s Kodi add-on repository → Game add-ons → Game providers → Lutris → Install
 
-If using Kodi v18 Leia or lesser you can download and manually install [v1.4.3](https://github.com/RobLoach/lutris-kodi-addon/archive/1.4.3.zip) of the add-on.
-
-## Install from repository
+## Install from repository (Leia)
 
 1. Make sure that Unknown Sources is enabled in Settings → System → Add-ons
 
@@ -27,7 +27,9 @@ If using Kodi v18 Leia or lesser you can download and manually install [v1.4.3](
 
 1. Visit Home → Settings → Add-ons → Install from repository → solbero’s Kodi add-on repository → Game add-ons → Game providers → Lutris → Install
 
-## Install manually
+##
+
+## Install manually (Matrix)
 
 1. [Download the latest version of the Lutris Kodi Addon](https://github.com/RobLoach/lutris-kodi-addon/releases/latest)
 
