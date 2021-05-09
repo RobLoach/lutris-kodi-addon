@@ -10,8 +10,8 @@ import errno
 import json
 import os
 import shlex
+import shutil
 import subprocess
-from distutils.spawn import find_executable
 from typing import Dict, List, Union
 
 import simplecache
@@ -50,7 +50,7 @@ def _get_path() -> list:
                                     os.strerror(errno.ENOENT),
                                     result)
     else:
-        result = find_executable('lutris')
+        result = shutil.which('lutris')
         if result is None:
             util.show_error(_localized(30201))
             raise FileNotFoundError(errno.ENOENT,
