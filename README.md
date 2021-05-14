@@ -16,26 +16,26 @@
 ## Install from repository (Matrix)
 
 1. Make sure that Unknown Sources is enabled in Settings → System → Add-ons
-1. [Install solbero's Kodi add-on repository](https://github.com/solbero/repository.solbero.matrix/blob/master/README.md)
-1. Visit Home → Settings → Add-ons → Install from repository → solbero’s Kodi add-on repository → Game add-ons → Game providers → Lutris → Install
+
+2. [Install solbero's Kodi add-on repository](https://github.com/solbero/repository.solbero.matrix/blob/master/README.md)
+
+3. Visit Home → Settings → Add-ons → Install from repository → solbero’s Kodi add-on repository → Game add-ons → Game providers → Lutris → Install
 
 ## Install from repository (Leia)
 
 1. Make sure that Unknown Sources is enabled in Settings → System → Add-ons
 
-1. [Install solbero's Kodi add-on repository](https://github.com/solbero/repository.solbero/blob/master/README.md)
+2. [Install solbero's Kodi add-on repository](https://github.com/solbero/repository.solbero/blob/master/README.md)
 
-1. Visit Home → Settings → Add-ons → Install from repository → solbero’s Kodi add-on repository → Game add-ons → Game providers → Lutris → Install
-
-##
+3. Visit Home → Settings → Add-ons → Install from repository → solbero’s Kodi add-on repository → Game add-ons → Game providers → Lutris → Install
 
 ## Install manually (Matrix)
 
 1. [Download the latest version of the Lutris Kodi Addon](https://github.com/RobLoach/lutris-kodi-addon/releases/latest)
 
-1. Go to Settings → Add-ons → Install from zip file
+2. Go to Settings → Add-ons → Install from zip file
 
-1. Navigate to where you placed the zip file and select Install
+3. Navigate to where you placed the zip file and select Install
 
 ## Development
 
