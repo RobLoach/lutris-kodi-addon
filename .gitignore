@@ -1,4 +1,6 @@
 env/
 .vscode/
+*.code-workspace
 *.pyc
 __pycache__/
+TODO.md
