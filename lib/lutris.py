@@ -31,7 +31,7 @@ def _get_path() -> list:
 
     Returns a custom path to the executable if it is defined in the
     add-on settings, otherwise locates the path automatically using
-    'distutil.spawn.find_executable()'.
+    'shutil.which()'.
 
     Raises:
         FileNotFoundError: If unable to find executable.
