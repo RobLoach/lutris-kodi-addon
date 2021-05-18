@@ -5,6 +5,9 @@
 # License: GPL v.2 https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
 # Imports
+import functools
+from typing import Any, Callable
+
 import xbmc
 import xbmcaddon
 import xbmcgui
@@ -72,17 +75,27 @@ def show_error(msg: str):
     notify_user(error, heading, icon=xbmcgui.NOTIFICATION_ERROR)
 
 
-def inhibit_idle_shutdown(bool: bool):
-    """Enables or disables the Kodi idle shutdown timer.
+def on_playback(func: Callable) -> Callable:
+    """Decorator which performs pre and post operations on playback.
+
+    Decorator which stops playback and suspends idle shutdown before
+    calling decorated function. After function is finished enables
+    idle shutdown.
 
     Args:
-        bool (bool): True for enable, False for disable.
+        func (Callable): Function to decorate.
     """
-    xbmc.executebuiltin(f"InhibitIdleShutdown({str(bool).lower()})")
-    log(f"Inhibit idle shutdown is: {bool}")
+    @functools.wraps(func)
+    def decorated(*args, **kwargs) -> Any:
+        if xbmc.Player().isPlaying():
+            xbmc.Player().stop()
 
+        xbmc.executebuiltin('InhibitIdleShutdown(true)')
 
-def stop_playback():
-    """Stop playback if Kodi is playing any media. """
-    if xbmc.Player().isPlaying():
-        xbmc.Player().stop()
+        response = func(*args, **kwargs)
+
+        xbmc.executebuiltin('InhibitIdleShutdown(false)')
+
+        return response
+
+    return decorated

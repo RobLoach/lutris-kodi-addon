@@ -146,6 +146,7 @@ def update_cache() -> List[Dict[str, Union[str, int]]]:
     return games
 
 
+@util.on_playback
 def run(args: Dict[str, List[str]]):
     """Runs a game using Lutris.
 
@@ -172,16 +173,12 @@ def run(args: Dict[str, List[str]]):
         command = path
 
     util.log(f"Launch command is: {' '.join(command)}")
-    util.stop_playback()
-    util.inhibit_idle_shutdown(True)
 
     try:
         subprocess.run(command, check=True)
     except subprocess.CalledProcessError:
         util.show_error(f"{_localized(30203)}")
         raise
-
-    util.inhibit_idle_shutdown(False)
 
 
 def get_art(slug: str) -> Dict[str, str]:
