@@ -80,7 +80,7 @@ def _get_games() -> List[Dict[str, Union[str, int]]]:
         ]
 
     Returns:
-        games (List[Dict[str, Union[str, int]]]): Games list of managed games.
+        games (List[Dict[str, Union[str, int]]]): List of installed games.
     """
     path = _get_path()
     flags = ['--list-games', '--installed', '--json']
@@ -138,11 +138,10 @@ def run(args: Dict[str, List[str]]):
     """Runs a game using Lutris.
 
     Note:
-        Passed dict must contain only one entry. Lutris is opened if
-        dict is empty.
+        Lutris is opened if passed dict is does not contain key 'id' or 'slug'.
 
-    Args:
-        args (dict): Lutris game id or slug as pair of {key: value}.
+    Args
+        args (dict): Key 'id' or 'slug' as pair of {key: value}.
 
     """
     path = _get_path()

@@ -25,18 +25,18 @@ def log(msg: str, lvl: int = 1):
 
     Note:
         Severity level parameters:
-            1 = LOGDEBUG
-            2 = LOGINFO
-            3 = LOGNOTICE
-            4 = LOGWARNING
-            5 = LOGERROR
-            6 = LOGSEVERE
-            7 = LOGFATAL
-            8 = LOGNONE
+            0 = xbmc.LOGDEBUG
+            1 = xbmc.LOGINFO
+            2 = xbmc.LOGNOTICE
+            3 = xbmc.LOGWARNING
+            4 = xbmc.LOGERROR
+            5 = xbmc.LOGSEVERE
+            6 = xbmc.LOGFATAL
+            7 = xbmc.LOGNONE
 
     Args:
         msg (str): Message to write to kodi.log.
-        lvl (int, optional): Severity level. Defaults to 1.
+        lvl (int, optional): Severity level. Defaults to xbmc.LOGDEBUG.
     """
     message = f"{_addon_name}: {msg}"
     xbmc.log(message, lvl)
@@ -66,9 +66,9 @@ def notify_user(msg: str, heading: str = _addon_name,
 def on_playback(func: Callable) -> Callable:
     """Decorator which performs pre and post operations on playback.
 
-    Decorator which stops playback and suspends idle shutdown before
-    calling decorated function. After function is finished enables
-    idle shutdown.
+    Decorator which stops playback and disables idle shutdown before
+    calling decorated function. After function terminates enables
+    idle shutdown again.
 
     Args:
         func (Callable): Function to decorate.

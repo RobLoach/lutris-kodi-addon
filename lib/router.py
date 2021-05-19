@@ -105,7 +105,7 @@ def run():
     """Runs a game
 
     Note:
-        Passes the 'kwargs' of 'plugin.url_for' as a dict to 'lutris.run'.
+        Passes the 'kwargs' of 'plugin.url_for()' as a dict to 'lutris.run'.
         If dict is empty Lutris is opened.
     """
     args = _plugin.args
