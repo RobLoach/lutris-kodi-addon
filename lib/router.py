@@ -25,7 +25,7 @@ _localized = _addon_id.getLocalizedString
 @_plugin.route('/')
 def index():
     """Creates an index menu for the add-on"""
-    games = lutris.get_cached_games()
+    games = lutris.get_games()
     is_folder = True
 
     xbmcplugin.addDirectoryItem(_addon_handle,
@@ -51,7 +51,7 @@ def index():
 @_plugin.route('/all')
 def all():
     """Creates a folder that list all managed games"""
-    games = lutris.get_cached_games()
+    games = lutris.get_games()
 
     set_items_list(games)
 
@@ -59,7 +59,7 @@ def all():
 @_plugin.route('/platforms')
 def platforms():
     """Creates platform folders based on the platforms of managed games."""
-    games = lutris.get_cached_games()
+    games = lutris.get_games()
     platforms = {str(game['platform']) for game in games}
 
     set_directory_list(platforms, platform)
@@ -72,7 +72,7 @@ def platform(platform: str):
     Args:
         platform (str): Platform folder to populate.
     """
-    games = lutris.get_cached_games()
+    games = lutris.get_games()
     platform_games = [game for game in games if game['platform'] == platform]
 
     set_items_list(platform_games)
@@ -81,7 +81,7 @@ def platform(platform: str):
 @_plugin.route('/runners')
 def runners():
     """Creates runner folders based on the runners of managed games."""
-    games = lutris.get_cached_games()
+    games = lutris.get_games()
     runners = {str(game['runner']) for game in games}
 
     set_directory_list(runners, runner)
@@ -94,7 +94,7 @@ def runner(runner: str):
     Args:
         runner (str): Runner folder to populate.
     """
-    games = lutris.get_cached_games()
+    games = lutris.get_games()
     runner_games = [game for game in games if game['runner'] == runner]
 
     set_items_list(runner_games)
@@ -112,11 +112,10 @@ def run():
     lutris.run(args)
 
 
-@_plugin.route('/update')
-def update():
-    """Updates the games cache."""
-    util.notify_user(_localized(30302))
-    lutris.update_cache()
+@_plugin.route('/delete')
+def delete():
+    """Deletes the add-on cache."""
+    util.delete_cache()
 
 
 def set_items_list(games: List[Dict[str, Union[str, int]]]):

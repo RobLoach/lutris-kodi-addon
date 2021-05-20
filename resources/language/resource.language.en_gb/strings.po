@@ -43,8 +43,8 @@ msgid "View"
 msgstr "View"
 
 msgctxt "#30106"
-msgid "Update cache"
-msgstr "Update cache"
+msgid "Delete cache"
+msgstr "Delete cache"
 
 msgctxt "#30107"
 msgid "Prefer covers over icons"
@@ -75,5 +75,5 @@ msgid "error"
 msgstr "error"
 
 msgctxt "#30302"
-msgid "Cache updating"
-msgstr "Cache updating"
+msgid "Cache deleted"
+msgstr "Cache deleted"

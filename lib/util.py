@@ -6,16 +6,25 @@
 
 # Imports
 import functools
+from ast import literal_eval
 from typing import Any, Callable
 
 import xbmc
 import xbmcaddon
 import xbmcgui
 
+try:
+    import StorageServer
+except ImportError:
+    import lib.storageserverdummy as StorageServer
+
+
 # Globals
 _addon_id = xbmcaddon.Addon()
 _addon_name = _addon_id.getAddonInfo('name')
 _localized = _addon_id.getLocalizedString
+_cache_expire_hours = _addon_id.getSettingInt('cache_expire_hours')
+_cache = StorageServer.StorageServer(_addon_name, _cache_expire_hours)
 
 
 def log(msg: str, lvl: int = xbmc.LOGDEBUG):
@@ -72,6 +81,9 @@ def on_playback(func: Callable) -> Callable:
 
     Args:
         func (Callable): Function to decorate.
+
+    Returns:
+        decorated (Callable): Decorated function.
     """
     @functools.wraps(func)
     def decorated(*args, **kwargs) -> Any:
@@ -87,3 +99,47 @@ def on_playback(func: Callable) -> Callable:
         return response
 
     return decorated
+
+
+def use_cache(func: Callable) -> Callable:
+    """Decorator which applies caching to passed function.
+
+    Checks if function response is in the cache, if it is the cached respose
+    is returned. If response is not in the cache or the cached response is
+    stale, the function is called and its response is cached. If caching is
+    disabled in the add-on settings the function response is returned
+    without caching.
+
+    Args:
+        func (Callable): Function to decorate.
+
+    Returns:
+        decorated (Callable): Decorated function.
+    """
+    @functools.wraps(func)
+    def decorated(*args, **kwargs) -> Any:
+        enable_cache = _addon_id.getSettingBool('enable_cache')
+        cache = _cache.get(func.__name__)
+
+        if enable_cache and cache:
+            response = literal_eval(cache)
+            log(f"Got cache for function {func.__name__}")
+        elif enable_cache and not cache:
+            response = func(*args, **kwargs)
+            _cache.set(func.__name__, repr(response))
+            log(f"Set cache for function {func.__name__}")
+        else:
+            response = func(*args, **kwargs)
+            log(f"Could not cache function {func.__name__}")
+
+        return response
+
+    return decorated
+
+
+def delete_cache():
+    """Deletes all add-on data stored in the cache"""
+    _cache.delete('%')
+
+    log("Deleted cache")
+    notify_user(_localized(30302))

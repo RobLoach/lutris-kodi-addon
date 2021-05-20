@@ -67,7 +67,7 @@
                 <!-- Update games -->
                 <setting id="update" type="action" label="30106" help="">
                     <level>0</level>
-                    <data>RunPlugin(plugin://plugin.lutris/update)</data>
+                    <data>RunPlugin(plugin://plugin.lutris/delete)</data>
                     <control type="button" format="action">
                         <close>false</close>
                     </control>

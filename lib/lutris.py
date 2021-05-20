@@ -5,7 +5,6 @@
 # License: GPL v.2 https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
 # Imports
-import datetime
 import errno
 import json
 import os
@@ -14,15 +13,12 @@ import shutil
 import subprocess
 from typing import Dict, List, Union
 
-import simplecache
 import xbmcaddon
 
 import lib.util as util
 
 # Globals
-_cache = simplecache.SimpleCache()
 _addon_id = xbmcaddon.Addon()
-_addon_name = _addon_id.getAddonInfo('name')
 
 
 def _get_path() -> list:
@@ -60,7 +56,8 @@ def _get_path() -> list:
     return path
 
 
-def _get_games() -> List[Dict[str, Union[str, int]]]:
+@util.use_cache
+def get_games() -> List[Dict[str, Union[str, int]]]:
     """Gets a list of dicts of installed games from Lutris.
 
     Note:
@@ -92,45 +89,6 @@ def _get_games() -> List[Dict[str, Union[str, int]]]:
     util.log(f"JSON output is: {parsed}")
 
     return parsed
-
-
-def get_cached_games() -> List[Dict[str, Union[str, int]]]:
-    """Checks if a cached games list exists, if not it gets
-    the games list and caches it.
-
-    Returns:
-        games (List[Dict[str, Union[str, int]]]): Games list of managed games.
-
-    """
-    cached_games = _cache.get(f"{_addon_name}.{'games'}")
-    enable_cache = _addon_id.getSettingBool('enable_cache')
-
-    if cached_games and enable_cache:
-        games = cached_games
-    else:
-        games = update_cache()
-
-    return games
-
-
-def update_cache() -> List[Dict[str, Union[str, int]]]:
-    """Gets the games list and caches it.
-
-    Returns:
-        games (List[Dict[str, Union[str, int]]]): Games list of managed games.
-    """
-    games = _get_games()
-
-    if _addon_id.getSettingBool('enable_cache'):
-        hours = float(_addon_id.getSettingInt('cache_expire_hours'))
-    else:
-        hours = float(0)
-
-    expiration = datetime.timedelta(hours=hours)
-
-    _cache.set(f"{_addon_name}.{'games'}", games, expiration=expiration)
-
-    return games
 
 
 @util.on_playback
