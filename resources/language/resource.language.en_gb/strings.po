@@ -19,16 +19,16 @@ msgstr ""
 # Settings
 
 msgctxt "#30100"
-msgid "Lutris"
-msgstr "Lutris"
+msgid "General"
+msgstr "General"
 
 msgctxt "#30101"
-msgid "Enable custom path"
-msgstr "Enable custom path"
+msgid "Enable custom executable path"
+msgstr "Enable custom executable path"
 
 msgctxt "#30102"
-msgid "Path to executable"
-msgstr "Path to executable"
+msgid "Path to custom executable"
+msgstr "Path to custom executable"
 
 msgctxt "#30103"
 msgid "Open Lutris"
