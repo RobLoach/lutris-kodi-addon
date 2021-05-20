@@ -33,16 +33,16 @@ def index():
                                 xbmcgui.ListItem("All"),
                                 is_folder)
 
-    if check_key('platform', games):
-        xbmcplugin.addDirectoryItem(_addon_handle,
-                                    _plugin.url_for(platforms),
-                                    xbmcgui.ListItem("Platforms"),
-                                    is_folder)
-
     if check_key('runner', games):
         xbmcplugin.addDirectoryItem(_addon_handle,
                                     _plugin.url_for(runners),
                                     xbmcgui.ListItem("Runners"),
+                                    is_folder)
+
+    if check_key('platform', games):
+        xbmcplugin.addDirectoryItem(_addon_handle,
+                                    _plugin.url_for(platforms),
+                                    xbmcgui.ListItem("Platforms"),
                                     is_folder)
 
     xbmcplugin.endOfDirectory(_addon_handle)
