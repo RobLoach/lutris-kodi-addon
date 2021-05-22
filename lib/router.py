@@ -175,7 +175,15 @@ def set_directory_list(labels: Set[str], func: Callable):
     xbmcplugin.endOfDirectory(_addon_handle)
 
 
-def check_key(key: str, games: List[Dict[str, Union[str, int]]]):
+def check_key(key: str, games: List[Dict[str, Union[str, int]]]) -> bool:
+    """Searches for value in games list.
+
+    Args:
+        games (List[Dict[str, Union[str, int]]])): Games list to search.
+
+    Returns:
+        bool (bool): True if value is found, else False.
+    """
     for game in games:
         if game.get(key):
             return True
