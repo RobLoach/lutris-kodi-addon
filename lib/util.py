@@ -18,7 +18,7 @@ _addon_name = _addon_id.getAddonInfo('name')
 _localized = _addon_id.getLocalizedString
 
 
-def log(msg: str, lvl: int = 1):
+def log(msg: str, lvl: int = xbmc.LOGDEBUG):
     """Writes a message to the log.
 
     Message is prefixed with add-on name.
