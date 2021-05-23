@@ -20,10 +20,10 @@ except ImportError:
 
 
 # Globals
-_addon_id = xbmcaddon.Addon()
-_addon_name = _addon_id.getAddonInfo('name')
-_localized = _addon_id.getLocalizedString
-_cache_expire_hours = _addon_id.getSettingInt('cache_expire_hours')
+_addon = xbmcaddon.Addon()
+_addon_name = _addon.getAddonInfo('name')
+_localized = _addon.getLocalizedString
+_cache_expire_hours = _addon.getSettingInt('cache_expire_hours')
 _cache = StorageServer.StorageServer(_addon_name, _cache_expire_hours)
 
 
@@ -118,7 +118,7 @@ def use_cache(func: Callable) -> Callable:
     """
     @functools.wraps(func)
     def decorated(*args, **kwargs) -> Any:
-        enable_cache = _addon_id.getSettingBool('enable_cache')
+        enable_cache = _addon.getSettingBool('enable_cache')
         cache = _cache.get(func.__name__)
 
         if enable_cache and cache:

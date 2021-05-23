@@ -17,9 +17,9 @@ import lib.util as util
 
 # Globals
 _plugin = routing.Plugin()
-_addon_id = xbmcaddon.Addon()
+_addon = xbmcaddon.Addon()
 _addon_handle = _plugin.handle
-_localized = _addon_id.getLocalizedString
+_localized = _addon.getLocalizedString
 
 
 @_plugin.route('/')

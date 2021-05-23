@@ -18,7 +18,7 @@ import xbmcaddon
 import lib.util as util
 
 # Globals
-_addon_id = xbmcaddon.Addon()
+_addon = xbmcaddon.Addon()
 
 
 def _get_path() -> list:
@@ -35,10 +35,10 @@ def _get_path() -> list:
         path (list): Path to executable.
 
     """
-    enable_custom_path = _addon_id.getSettingBool('enable_custom_path')
+    enable_custom_path = _addon.getSettingBool('enable_custom_path')
 
     if enable_custom_path:
-        result = _addon_id.getSettingString('custom_path')
+        result = _addon.getSettingString('custom_path')
         _, tail = os.path.split(result)
         if tail != 'lutris':
             raise ValueError(f"Executable 'lutris' not in custom path '{result}'")
@@ -160,7 +160,7 @@ def _get_art_paths(slug: str) -> Dict[str, Dict[str, str]]:
     banner_path = os.path.join(lutris, 'banners', f"{slug}.jpg")
     cover_path = os.path.join(lutris, 'covers', f"{slug}.jpg")
 
-    prefer_covers = _addon_id.getSettingBool('prefer_covers')
+    prefer_covers = _addon.getSettingBool('prefer_covers')
 
     art_paths = {}
     if prefer_covers:
