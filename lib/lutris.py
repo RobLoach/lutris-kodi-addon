@@ -23,7 +23,6 @@ import lib.util as util
 _cache = simplecache.SimpleCache()
 _addon_id = xbmcaddon.Addon()
 _addon_name = _addon_id.getAddonInfo('name')
-_localized = _addon_id.getLocalizedString
 
 
 def _get_path() -> list:
@@ -44,15 +43,12 @@ def _get_path() -> list:
 
     if enable_custom_path:
         result = _addon_id.getSettingString('custom_path')
-        if not os.path.isfile(result):
-            util.show_error(_localized(30201))
-            raise FileNotFoundError(errno.ENOENT,
-                                    os.strerror(errno.ENOENT),
-                                    result)
+        _, tail = os.path.split(result)
+        if tail != 'lutris':
+            raise ValueError(f"Executable 'lutris' not in custom path '{result}'")
     else:
         result = shutil.which('lutris')
         if result is None:
-            util.show_error(_localized(30201))
             raise FileNotFoundError(errno.ENOENT,
                                     os.strerror(errno.ENOENT),
                                     'lutris')
@@ -90,21 +86,12 @@ def _get_games() -> List[Dict[str, Union[str, int]]]:
     flags = ['--list-games', '--installed', '--json']
     command = path + flags
 
-    try:
-        result = subprocess.check_output(command)
-    except subprocess.CalledProcessError:
-        util.show_error(_localized(20202))
-        raise
+    raw = subprocess.check_output(command)
+    parsed = json.loads(raw)
 
-    try:
-        response = json.loads(result)
-    except json.JSONDecodeError:
-        util.show_error(_localized(30203))
-        raise
+    util.log(f"JSON output is: {parsed}")
 
-    util.log(f"JSON output is: {response}")
-
-    return response
+    return parsed
 
 
 def get_cached_games() -> List[Dict[str, Union[str, int]]]:
@@ -160,10 +147,7 @@ def run(args: Dict[str, List[str]]):
     """
     path = _get_path()
 
-    if len(args) > 1:
-        util.show_error(_localized(30206))
-        raise ValueError(errno.EINVAL, os.strerror(errno.ENOENT), args)
-    elif 'id' in args:
+    if 'id' in args:
         flag = [f"lutris:rungameid/{args['id'][0]}"]
         command = path + flag
     elif 'slug' in args:
@@ -172,13 +156,9 @@ def run(args: Dict[str, List[str]]):
     else:
         command = path
 
-    util.log(f"Launch command is: {' '.join(command)}")
+    util.log(f"Run command is: {' '.join(command)}")
 
-    try:
-        subprocess.run(command, check=True)
-    except subprocess.CalledProcessError:
-        util.show_error(f"{_localized(30203)}")
-        raise
+    subprocess.run(command, check=True)
 
 
 def get_art(slug: str) -> Dict[str, str]:
@@ -200,7 +180,7 @@ def get_art(slug: str) -> Dict[str, str]:
             if 'fallback' in value:
                 art[key] = value['fallback']
             else:
-                util.log(f"Unable to find {key} art for {slug}.")
+                util.log(f"Unable to find '{key}' art for '{slug}'.")
 
     return art
 

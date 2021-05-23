@@ -63,18 +63,6 @@ def notify_user(msg: str, heading: str = _addon_name,
     xbmcgui.Dialog().notification(heading, msg, icon)
 
 
-def show_error(msg: str):
-    """Displays an error notification to the user.
-
-    Args:
-        msg (str): Message to display.
-    """
-    error = f"{msg}. {_localized(30200)}."
-    heading = f"{_addon_name} {_localized(30301)}"
-
-    notify_user(error, heading, icon=xbmcgui.NOTIFICATION_ERROR)
-
-
 def on_playback(func: Callable) -> Callable:
     """Decorator which performs pre and post operations on playback.
 

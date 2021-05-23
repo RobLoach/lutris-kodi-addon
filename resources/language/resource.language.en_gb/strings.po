@@ -60,34 +60,6 @@ msgstr "Cache (hours)"
 
 # Errors
 
-msgctxt "#30200"
-msgid "Check the log for more information"
-msgstr "Check the log for more information"
-
-msgctxt "#30201"
-msgid "Unable to find the executable"
-msgstr "Unable to find the executable"
-
-msgctxt "#30202"
-msgid "Unable to get a list of installed games"
-msgstr "Unable to get a list of installed games"
-
-msgctxt "#30203"
-msgid "Unable to parse the list of installed games"
-msgstr "Unable to parse the list of installed games"
-
-msgctxt "#30204"
-msgid "Unable to launch"
-msgstr "Unable to launch"
-
-msgctxt "#30205"
-msgid "Unable to get Lutris version number"
-msgstr "Unable to get Lutris version number"
-
-msgctxt "#30206"
-msgid "More than one item in dict passed to run function"
-msgstr "More than one item in dict passed to run function"
-
 msgctxt "#30207"
 msgid "Unknown"
 msgstr "Unknown"
