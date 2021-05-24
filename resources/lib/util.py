@@ -123,14 +123,14 @@ def use_cache(func: Callable) -> Callable:
 
         if enable_cache and cache:
             response = literal_eval(cache)
-            log(f"Got cache for function {func.__name__}")
+            log(f"Got cache for function '{func.__name__}'")
         elif enable_cache and not cache:
             response = func(*args, **kwargs)
             _cache.set(func.__name__, repr(response))
-            log(f"Set cache for function {func.__name__}")
+            log(f"Set cache for function '{func.__name__}'")
         else:
             response = func(*args, **kwargs)
-            log(f"Could not cache function {func.__name__}")
+            log(f"Could not cache function '{func.__name__}'")
 
         return response
 
