@@ -22,7 +22,6 @@ except ImportError:
 # Globals
 _addon = xbmcaddon.Addon()
 _addon_name = _addon.getAddonInfo('name')
-_localized = _addon.getLocalizedString
 _cache_expire_hours = _addon.getSettingInt('cache_expire_hours')
 _cache = StorageServer.StorageServer(_addon_name, _cache_expire_hours)
 
@@ -142,4 +141,3 @@ def delete_cache():
     _cache.delete('%')
 
     log("Deleted cache")
-    notify_user(_localized(30302))

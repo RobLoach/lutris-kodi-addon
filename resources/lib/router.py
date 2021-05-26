@@ -115,6 +115,7 @@ def run():
 @_plugin.route('/delete')
 def delete():
     """Deletes the add-on cache."""
+    util.notify_user(_localized(30302))
     util.delete_cache()
 
 
