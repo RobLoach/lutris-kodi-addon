@@ -26,24 +26,23 @@ _localized = _addon.getLocalizedString
 def index():
     """Creates an index menu for the add-on"""
     games = lutris.get_games()
-    is_folder = True
 
     xbmcplugin.addDirectoryItem(_addon_handle,
                                 _plugin.url_for(all),
                                 xbmcgui.ListItem("All"),
-                                is_folder)
+                                isFolder=True)
 
     if check_key('runner', games):
         xbmcplugin.addDirectoryItem(_addon_handle,
                                     _plugin.url_for(runners),
                                     xbmcgui.ListItem("Runners"),
-                                    is_folder)
+                                    isFolder=True)
 
     if check_key('platform', games):
         xbmcplugin.addDirectoryItem(_addon_handle,
                                     _plugin.url_for(platforms),
                                     xbmcgui.ListItem("Platforms"),
-                                    is_folder)
+                                    isFolder=True)
 
     xbmcplugin.endOfDirectory(_addon_handle)
 
@@ -139,7 +138,6 @@ def set_items_list(games: List[Dict[str, Union[str, int]]]):
 
         art = lutris.get_art(slug)
         url = _plugin.url_for(run, id=id)
-        is_folder = False
 
         item = xbmcgui.ListItem(title, offscreen=True)
         item.setProperty('IsPlayable', 'true')
@@ -148,7 +146,8 @@ def set_items_list(games: List[Dict[str, Union[str, int]]]):
                               'gameclient': runner})
         item.setArt(art)
 
-        xbmcplugin.addDirectoryItem(_addon_handle, url, item, is_folder)
+        xbmcplugin.addDirectoryItem(_addon_handle, url, item,
+                                    isFolder=False, totalItems=len(games))
 
     xbmcplugin.endOfDirectory(_addon_handle)
 
@@ -166,12 +165,11 @@ def set_directory_list(labels: Set[str], func: Callable):
 
     for label in labels:
         url = _plugin.url_for(func, label)
-        is_folder = True
 
         item = xbmcgui.ListItem(label.capitalize())
         item.setProperty('IsPlayable', 'false')
 
-        xbmcplugin.addDirectoryItem(_addon_handle, url, item, is_folder)
+        xbmcplugin.addDirectoryItem(_addon_handle, url, item, isFolder=True)
 
     xbmcplugin.endOfDirectory(_addon_handle)
 
