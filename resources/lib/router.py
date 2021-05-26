@@ -179,16 +179,16 @@ def check_key(key: str, games: List[Dict[str, Union[str, int]]]) -> bool:
     """Searches for value in games list.
 
     Args:
+        key (str): Key to search.
         games (List[Dict[str, Union[str, int]]])): Games list to search.
 
     Returns:
         bool (bool): True if value is found, else False.
     """
-    for game in games:
-        if game.get(key):
-            return True
-
-    return False
+    if any(key in game for game in games):
+        return True
+    else:
+        return False
 
 
 def main():
