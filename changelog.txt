@@ -1,3 +1,13 @@
+[B]Version 2.1.0: July 20th, 2021[/B]
+- Replace Simple Cache with Common Plugin Cache, by @solbero
+- Implement caching and logging decorators, by @solbero
+- Improve wording of function docstrings, by @solbero
+- Improve error handling in functions, by @solbero
+- Update images to kodi add-on specifications, by @solbero
+- Improve wording of settings.xml strings, by @solbero
+- Improve add-on description in addon.xml, by @solbero
+- Update README.MD, by @solbero
+
 [B]Version 2.0.2: May 9th, 2021[/B]
 - Fix module errors, by @solbero
 
