@@ -2,5 +2,5 @@ env/
 .vscode/
 *.code-workspace
 *.pyc
+*.sqlite
 __pycache__/
-TODO.md
