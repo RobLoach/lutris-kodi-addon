@@ -15,7 +15,7 @@ from typing import Dict, List, Union
 
 import xbmcaddon
 
-from resources.lib import util
+import lib.util as util
 
 # Globals
 _addon = xbmcaddon.Addon()

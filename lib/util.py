@@ -16,7 +16,7 @@ import xbmcgui
 try:
     import StorageServer
 except ImportError:
-    from resources.lib import storageserverdummy as StorageServer
+    import lib.storageserverdummy as StorageServer
 
 
 # Globals

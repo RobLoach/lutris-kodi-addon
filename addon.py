@@ -4,7 +4,7 @@
 # Created on: 13.12.2020
 # License: GPL v.2 https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
-from resources.lib import router
+from lib import router
 
 main = router.main
 

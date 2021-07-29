@@ -12,8 +12,8 @@ import xbmcaddon
 import xbmcgui
 import xbmcplugin
 
-from resources.lib import lutris
-from resources.lib import util
+import lib.lutris as lutris
+import lib.util as util
 
 # Globals
 _plugin = routing.Plugin()
@@ -108,7 +108,6 @@ def run():
         If dict is empty Lutris is opened.
     """
     args = _plugin.args
-
     lutris.run(args)
 
 
