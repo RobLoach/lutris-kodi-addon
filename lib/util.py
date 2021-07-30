@@ -25,6 +25,9 @@ _addon_name = _addon.getAddonInfo('name')
 _cache_expire_hours = _addon.getSettingInt('cache_expire_hours')
 _cache = StorageServer.StorageServer(_addon_name, _cache_expire_hours)
 
+# Type aliases
+DecoratedType = TypeVar('DecoratedType', bound=Callable[..., Any])
+
 
 def log(msg: str, lvl: int = xbmc.LOGDEBUG):
     """Writes a message to the log.
@@ -71,7 +74,7 @@ def notify_user(msg: str, heading: str = _addon_name,
     xbmcgui.Dialog().notification(heading, msg, icon)
 
 
-def on_playback(func: Callable) -> Callable:
+def on_playback(func: DecoratedType) -> DecoratedType:
     """Decorator which performs pre and post operations on playback.
 
     Decorator which stops playback and disables idle shutdown before
@@ -85,7 +88,7 @@ def on_playback(func: Callable) -> Callable:
         decorated (Callable): Decorated function.
     """
     @functools.wraps(func)
-    def decorated(*args, **kwargs) -> Any:
+    def decorated(*args, **kwargs):
         if xbmc.Player().isPlaying():
             xbmc.Player().stop()
 
@@ -97,10 +100,10 @@ def on_playback(func: Callable) -> Callable:
 
         return response
 
-    return decorated
+    return cast(DecoratedType, decorated)
 
 
-def use_cache(func: Callable) -> Callable:
+def use_cache(func: DecoratedType) -> DecoratedType:
     """Decorator which applies caching to passed function.
 
     Checks if function response is in the cache, if it is the cached respose
@@ -133,7 +136,7 @@ def use_cache(func: Callable) -> Callable:
 
         return response
 
-    return decorated
+    return cast(DecoratedType, decorated)
 
 
 def delete_cache():
