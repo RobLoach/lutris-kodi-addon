@@ -7,7 +7,7 @@
 # Imports
 import functools
 from ast import literal_eval
-from typing import Any, Callable
+from typing import Any, Callable, TypeVar, cast
 
 import xbmc
 import xbmcaddon
@@ -91,12 +91,15 @@ def on_playback(func: DecoratedType) -> DecoratedType:
     def decorated(*args, **kwargs):
         if xbmc.Player().isPlaying():
             xbmc.Player().stop()
+            log("Stopped Kodi playback before launching game")
 
         xbmc.executebuiltin('InhibitIdleShutdown(true)')
+        log("Prevent the system to shutdown on idle before launching game")
 
         response = func(*args, **kwargs)
 
         xbmc.executebuiltin('InhibitIdleShutdown(false)')
+        log("Allow the system to shutdown on idle after launching game")
 
         return response
 
