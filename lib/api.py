@@ -39,9 +39,9 @@ ImageBaseURL = Dict[str, str]
 class TheGamesDB():
 
     def __init__(self, cache_path: str):
-        self._base_url = 'https://api.thegamesdb.net/'
-        self._api_key = 'bfaf5ca817b0a117b12a7981424e6e4d1442227c39942e691f2d514ddfbcc333'
-        self._cache_path = cache_path
+        self._base_url: str = 'https://api.thegamesdb.net/'
+        self._api_key: str = 'bfaf5ca817b0a117b12a7981424e6e4d1442227c39942e691f2d514ddfbcc333'
+        self._cache_path: str = cache_path
         self._session = requests_cache.CachedSession(self._cache_path, ExpirationTime=datetime.timedelta(weeks=4))
 
     def get_games_by_game_id(self, game_id: Union[GameID, List[GameID]]) -> List[GameInfo]:
