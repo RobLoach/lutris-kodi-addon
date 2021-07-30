@@ -20,6 +20,12 @@ import lib.util as util
 # Globals
 _addon = xbmcaddon.Addon()
 
+# Type aliases
+JSONAble = Union[str, int, float, bool, None]
+JSONDict = Dict[JSONAble, Union[JSONAble, List[dict]]]
+JSONList = List[JSONDict]
+JSON = Union[JSONList, JSONDict]
+
 
 def _get_path() -> List[str]:
     """Finds the path to the Lutris executable.
@@ -58,11 +64,11 @@ def _get_path() -> List[str]:
 
 
 @util.use_cache
-def get_games() -> List[Dict[str, Union[str, int]]]:
-    """Gets a list of dicts of installed games from Lutris.
+def get_games() -> JSONList:
+    """Gets a JSONList of installed games from Lutris.
 
     Note:
-        List of dicts returned by the function looks as follows:
+        JSONList returned by the function looks as follows:
         [
         {
             "id": 74,
@@ -78,7 +84,7 @@ def get_games() -> List[Dict[str, Union[str, int]]]:
         ]
 
     Returns:
-        games (List[Dict[str, Union[str, int]]]): List of installed games.
+        games (JSONList): JSONList of installed games.
     """
     path = _get_path()
     flags = ['--list-games', '--installed', '--json']
