@@ -21,7 +21,7 @@ import lib.util as util
 _addon = xbmcaddon.Addon()
 
 
-def _get_path() -> list:
+def _get_path() -> List[str]:
     """Finds the path to the Lutris executable.
 
     Returns a custom path to the executable if it is defined in the
@@ -29,10 +29,11 @@ def _get_path() -> list:
     'shutil.which()'.
 
     Raises:
-        FileNotFoundError: If unable to find executable.
+        ValueError: Executable not in custom path defined in add-on settings.
+        FileNotFoundError: Unable to find executable in system $PATH.
 
     Returns:
-        path (list): Path to executable.
+        path (List[str]): Split path to executable.
 
     """
     enable_custom_path = _addon.getSettingBool('enable_custom_path')
@@ -49,7 +50,7 @@ def _get_path() -> list:
                                     os.strerror(errno.ENOENT),
                                     'lutris')
 
-    util.log(f"Executable path is: {result}")
+    util.log(f"Found executable at '{result}' ")
 
     path = shlex.split(str(result))
 
