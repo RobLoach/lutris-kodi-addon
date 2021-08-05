@@ -18,12 +18,9 @@ try:
 except ImportError:
     import lib.storageserverdummy as StorageServer
 
-
 # Globals
 _addon = xbmcaddon.Addon()
 _addon_name = _addon.getAddonInfo('name')
-_cache_expire_hours = _addon.getSettingInt('cache_expire_hours')
-_cache = StorageServer.StorageServer(_addon_name, _cache_expire_hours)
 
 # Type aliases
 DecoratedType = TypeVar('DecoratedType', bound=Callable[..., Any])
@@ -124,14 +121,17 @@ def use_cache(func: DecoratedType) -> DecoratedType:
     @functools.wraps(func)
     def decorated(*args, **kwargs) -> Any:
         enable_cache = _addon.getSettingBool('enable_cache')
-        cache = _cache.get(func.__name__)
+        cache_expire_hours = _addon.getSettingInt('cache_expire_hours')
+
+        storageserver = StorageServer.StorageServer(_addon_name, cache_expire_hours)
+        cache = storageserver.get(func.__name__)
 
         if enable_cache and cache:
             response = literal_eval(cache)
             log(f"Got cache for function '{func.__name__}'")
         elif enable_cache and not cache:
             response = func(*args, **kwargs)
-            _cache.set(func.__name__, repr(response))
+            storageserver.set(func.__name__, repr(response))
             log(f"Set cache for function '{func.__name__}'")
         else:
             response = func(*args, **kwargs)
@@ -144,6 +144,9 @@ def use_cache(func: DecoratedType) -> DecoratedType:
 
 def delete_cache():
     """Deletes all add-on data stored in the cache"""
-    _cache.delete('%')
+    cache_expire_hours = _addon.getSettingInt('cache_expire_hours')
+
+    storageserver = StorageServer.StorageServer(_addon_name, cache_expire_hours)
+    storageserver.delete('%')
 
     log("Deleted cache")
