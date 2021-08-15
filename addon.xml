@@ -5,9 +5,11 @@
     version="2.1.0"
     provider-name="Rob Loach, solbero">
     <requires>
-        <import addon="xbmc.python" version="3.0.0" />
+        <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.routing" version="0.2.3"/>
         <import addon="script.common.plugin.cache" version="2.6.1"/>
+        <import addon="script.module.requests-cache" version="0.5.2"/>
+        <import addon="script.module.fuzzywuzzy" version="0.17.0"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="addon.py">
         <provides>game</provides>
