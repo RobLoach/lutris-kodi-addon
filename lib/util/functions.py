@@ -6,24 +6,30 @@
 
 # Imports
 import functools
+import os
+import requests
+import sys
+from dataclasses import dataclass
 from ast import literal_eval
-from typing import Any, Callable, TypeVar, cast
+from typing import Any, List, Callable, TypeVar, Union, cast
 
 import xbmc
 import xbmcaddon
 import xbmcgui
+import xbmcvfs
 
 try:
     import StorageServer
 except ImportError:
-    import lib.storageserverdummy as StorageServer
-
-# Globals
-_addon = xbmcaddon.Addon()
-_addon_name = _addon.getAddonInfo('name')
+    import lib.util.storageserverdummy as StorageServer
 
 # Type aliases
 DecoratedType = TypeVar('DecoratedType', bound=Callable[..., Any])
+
+
+# Functions
+def get_localized_string(id: int) -> str:
+    return _addon.getLocalizedString(id)
 
 
 def log(msg: str, lvl: int = xbmc.LOGDEBUG):
@@ -46,11 +52,11 @@ def log(msg: str, lvl: int = xbmc.LOGDEBUG):
         msg (str): Message to write to kodi.log.
         lvl (int, optional): Severity level. Defaults to xbmc.LOGDEBUG.
     """
-    message = f"{_addon_name}: {msg}"
+    message = f"{ADDON_NAME}: {msg}"
     xbmc.log(message, lvl)
 
 
-def notify_user(msg: str, heading: str = _addon_name,
+def notify_user(msg: str, heading: str = ADDON_NAME,
                 icon=xbmcgui.NOTIFICATION_INFO):
     """Displays a notification to the user. Add-on name is added as a
     heading to the message.
@@ -71,6 +77,28 @@ def notify_user(msg: str, heading: str = _addon_name,
     xbmcgui.Dialog().notification(heading, msg, icon)
 
 
+def delete_cache():
+    """Deletes all game data stored in Simple Plugin Cache"""
+    storageserver = StorageServer.StorageServer(ADDON_NAME)
+    storageserver.delete('%')
+
+    log("Deleted games cache")
+
+
+def download_file(url: str, folder: str, filename: str) -> str:
+    folder_path = os.path.join(ADDON_DATA_FOLDER, folder)
+    if not os.path.isdir(folder_path):
+        os.mkdir(folder_path)
+
+    file_path = os.path.join(folder_path, filename)
+    request = requests.get(url)
+    with open(file_path, 'wb') as file:
+        file.write(request.content)
+
+    return file_path
+
+
+# Decorators
 def on_playback(func: DecoratedType) -> DecoratedType:
     """Decorator which performs pre and post operations on playback.
 
@@ -120,16 +148,15 @@ def use_cache(func: DecoratedType) -> DecoratedType:
     """
     @functools.wraps(func)
     def decorated(*args, **kwargs) -> Any:
-        enable_cache = _addon.getSettingBool('enable_cache')
-        cache_expire_hours = _addon.getSettingInt('cache_expire_hours')
 
-        storageserver = StorageServer.StorageServer(_addon_name, cache_expire_hours)
+
+        storageserver = StorageServer.StorageServer(ADDON_NAME, CACHE_EXPIRE_HOURS)
         cache = storageserver.get(func.__name__)
 
-        if enable_cache and cache:
+        if ENABLE_CACHE and cache:
             response = literal_eval(cache)
             log(f"Got cache for function '{func.__name__}'")
-        elif enable_cache and not cache:
+        elif ENABLE_CACHE and not cache:
             response = func(*args, **kwargs)
             storageserver.set(func.__name__, repr(response))
             log(f"Set cache for function '{func.__name__}'")
@@ -140,13 +167,3 @@ def use_cache(func: DecoratedType) -> DecoratedType:
         return response
 
     return cast(DecoratedType, decorated)
-
-
-def delete_cache():
-    """Deletes all add-on data stored in the cache"""
-    cache_expire_hours = _addon.getSettingInt('cache_expire_hours')
-
-    storageserver = StorageServer.StorageServer(_addon_name, cache_expire_hours)
-    storageserver.delete('%')
-
-    log("Deleted cache")
