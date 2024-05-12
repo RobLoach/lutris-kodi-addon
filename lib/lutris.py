@@ -158,7 +158,7 @@ def _get_art_paths(slug: str) -> Dict[str, Dict[str, str]]:
 
     icon_path = os.path.join(icons, f"lutris_{slug}.png")
     banner_path = os.path.join(lutris, 'banners', f"{slug}.jpg")
-    cover_path = os.path.join(lutris, 'covers', f"{slug}.jpg")
+    cover_path = os.path.join(lutris, 'coverart', f"{slug}.jpg")
 
     prefer_covers = _addon.getSettingBool('prefer_covers')
 
